@@ -1,0 +1,182 @@
+/**
+ * Copyright (C) 2025 nasty.codes
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* Helper */
+.mb-1 {
+	margin-bottom: 15px;
+}
+.mb-2 {
+	margin-bottom: 30px;
+}
+.mr-1 { margin-right: 15px; }
+.mr-2 { margin-right: 30px; }
+
+/* Icon */
+a.toplevel_page_nastymaps .dashicons-before img {
+	width: 20px
+}
+
+/* Wrap */
+.nastymaps-wrap {
+    margin-right: 20px;
+}
+
+/* Title */
+.nastymaps-wrap .title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 -20px;
+    padding: 20px;
+    background-color: #1D2327;
+}
+.nastymaps-wrap .title .outer-title-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.nastymaps-wrap .title .outer-title-wrap .nastymaps-logo {
+    position: relative;
+    display: block;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    transform: none;
+    transition: transform .5s ease;
+    outline: none;
+}
+.nastymaps-wrap .title .outer-title-wrap .nastymaps-logo:focus {
+    box-shadow: 0 0 0 1px #EEE, 0 0 2px 1px rgb(238 238 238 / 80%);
+}
+.nastymaps-wrap .title .outer-title-wrap .nastymaps-logo:hover {
+    transform: rotate( 22.5deg );
+}
+.nastymaps-wrap .title .outer-title-wrap .nastymaps-logo:after {
+    position: absolute;
+    display: block;
+    content: '';
+    width: 40px;
+    height: 40px;
+    left: 50%;
+    top: 50%;
+    border-radius: 50%;
+    transform: translate(-50%,-50%) rotate(67.25deg);
+    opacity: 0;
+    background: #EEE;
+    transition: opacity .5s ease;
+    z-index: 1;
+}
+.nastymaps-wrap .title .outer-title-wrap .nastymaps-logo:hover:after {
+    opacity: 1;
+}
+.nastymaps-wrap .title .outer-title-wrap .nastymaps-logo img {
+    position: relative;
+    width: 100%;
+    z-index: 2;
+}
+
+.nastymaps-wrap .title .outer-title-wrap .title-wrap {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+.nastymaps-wrap .title .outer-title-wrap .title-wrap .description {
+    margin: 0;
+    color: #EEE;
+}
+
+.nastymaps-wrap .title .outer-title-wrap .title-wrap .inner-title-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+.nastymaps-wrap .title .outer-title-wrap .title-wrap .inner-title-wrap .nastymaps-title {
+    margin: 0;
+    color: #EEE;
+    line-height: 1.1em;
+}
+.nastymaps-wrap .title .outer-title-wrap .title-wrap .inner-title-wrap .nastymaps-version {
+    margin-left: 5px;
+    color: #bbb;
+}
+
+.nastymaps-wrap .title .link-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin-left: auto;
+}
+.nastymaps-wrap .title .link-wrap a {
+    color: #888;
+    padding:10px;
+    border-radius: 5px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.71428571;
+    transition: color .5s ease;
+    box-shadow: none;
+}
+.nastymaps-wrap .title .link-wrap a:hover {
+    color: #EEE;
+}
+.nastymaps-wrap .title .link-wrap a:not(:last-of-type):first-of-type {
+    margin-right: 10px;
+}
+
+/* Nav */
+.nastymaps-wrap .nav-tab-wrapper {
+    display: flex;
+    margin: 0 -20px;
+    padding: 20px;
+    padding-top: 0;
+    background-color: #1D2327;
+    border-bottom: none;
+}
+.nastymaps-wrap .nav-tab-wrapper a.nav-tab {
+    margin-left: 0!important;
+    background: transparent;
+    color: #888;
+    border: none;
+    border-radius: 0;
+    text-transform: uppercase;
+    transition: color .5s ease;
+    box-shadow: none !important;
+}
+.nastymaps-wrap .nav-tab-wrapper a.nav-tab:not(:last-of-type) {
+    margin-right: 10px;
+}
+.nastymaps-wrap .nav-tab-wrapper a.nav-tab.tab-debug {
+    margin-left: auto !important;
+}
+.nastymaps-wrap .nav-tab-wrapper a.nav-tab:hover,
+.nastymaps-wrap .nav-tab-wrapper a.nav-tab.nav-tab-active {
+    color: #EEE;
+}
+
+/* Input */
+.inside .input-group { margin-top: 12px }
+.input-group {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.input-group .nastymaps-label {
+	display: inline-block;
+	min-width: 6em;
+}
