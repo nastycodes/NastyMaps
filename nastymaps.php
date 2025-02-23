@@ -2,9 +2,9 @@
 /**
  * Plugin Name: NastyMaps
  * Description: NastyMaps is a WordPress-Plugin that allows you to create and manage maps with ease.
- * Author: Justin Lochner
+ * Author: Justin L - nasty.codes
  * Author URI: https://nasty.codes
- * Version: 1.1
+ * Version: 1.0
  * Text Domain: nastymaps
  * 
  * Copyright (C) 2025 nasty.codes

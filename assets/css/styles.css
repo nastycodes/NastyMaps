@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025 nasty.codes
+ * Copyright (C) 2025 Justin Lochner
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,24 +15,77 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Helper */
-.mb-1 {
-	margin-bottom: 15px;
+:root {
+    --color-wrapper: #E7D7C1;
+    --color-smooth-light: #EEE;
+    --color-wp: #1D2327;
 }
-.mb-2 {
-	margin-bottom: 30px;
+
+.bg-wrapper {
+    background-color: var(--color-wrapper);
 }
-.mr-1 { margin-right: 15px; }
-.mr-2 { margin-right: 30px; }
+.bg-wp {
+    background-color: var(--color-wp);
+}
+.color-smooth-light {
+    color: var(--color-smooth-light);
+}
 
 /* Icon */
 a.toplevel_page_nastymaps .dashicons-before img {
 	width: 20px
 }
 
-/* Wrap */
+.header-wrap {
+	position: sticky;
+	top: 32px;
+	z-index: 999;
+}
+#nastymaps-subnav {
+	position: sticky;
+	top: 189.5px;
+	z-index: 999;
+}
+
+/* Helpers */
+.text-sm {
+	font-size: .8em;
+	line-height: .8em;
+}
 .nastymaps-wrap {
     margin-right: 20px;
+}
+.submit-wrap {
+	position: sticky;
+	bottom: 0;
+}
+.vertical-middle {
+	vertical-align: middle;
+}
+
+.nastymaps-wrap input {
+	box-shadow: none;
+	border-radius: var(--bs-border-radius);
+	border: var(--bs-border-width) solid var(--bs-border-color);
+	background-color: var(--bs-body-bg);
+	color: var(--bs-body-color);
+
+	border-radius: 0;
+}
+.nastymaps-wrap input:focus {
+	border-color: #86b7fe;
+	box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
+	outline: 0;
+}
+.nastymaps-wrap textarea {
+	padding-left: 8px;
+	padding-right: 8px;
+	border-radius: 0;
+}
+
+.nastymaps-wrap input::placeholder,
+.nastymaps-wrap textarea::placeholder {
+	color: #6c757d;
 }
 
 /* Title */
@@ -155,11 +208,12 @@ a.toplevel_page_nastymaps .dashicons-before img {
     border: none;
     border-radius: 0;
     text-transform: uppercase;
+	padding: 5px 0;
     transition: color .5s ease;
     box-shadow: none !important;
 }
 .nastymaps-wrap .nav-tab-wrapper a.nav-tab:not(:last-of-type) {
-    margin-right: 10px;
+    margin-right: 20px;
 }
 .nastymaps-wrap .nav-tab-wrapper a.nav-tab.tab-debug {
     margin-left: auto !important;
@@ -179,4 +233,96 @@ a.toplevel_page_nastymaps .dashicons-before img {
 .input-group .nastymaps-label {
 	display: inline-block;
 	min-width: 6em;
+}
+
+/* CodeMirror */
+.CodeMirror-fullscreen {
+	z-index: 99999 !important;
+}
+
+/* Toasts */
+#toasts {
+	min-height: 0;
+	position: fixed;
+	right: 20px;
+	top: 209.5px;
+	width: 300px;
+	max-width: calc(100% - 40px);
+	z-index: 99999;
+}
+
+#toasts .nasty-toast {
+	background: #d6d8d9;
+	border-radius: 3px;
+	color: rgba(0,0,0, .6);
+	cursor: default;
+	opacity: 0;
+	position: relative;
+	transform: translateY(15%);
+	transition: opacity .5s ease-in-out, transform .5s ease-in-out, height .5s ease-in-out;
+	min-width: 100%;
+	will-change: opacity, transform, height;
+	z-index: 99999;
+}
+#toasts .nasty-toast:not(:last-of-type) {
+	margin-bottom: 10px;
+}
+
+#toasts .nasty-toast.show {
+	opacity: 1;
+	transform: translateY(0);
+}
+#toasts .nasty-toast.hide {
+	opacity: 0;
+	overflow: hidden;
+}
+
+#toasts .nasty-toast.success {
+	background: #4caf50;
+	color: #fff;
+}
+#toasts .nasty-toast.warning {
+	background: #ffa533;
+}
+#toasts .nasty-toast.info {
+	background: #2cbcff;
+}
+#toasts .nasty-toast.error {
+	background: #f44336;
+}
+
+#toasts .nasty-toast .close {
+	position: absolute;
+	top: 50%;
+	right: 14px;
+	height: 16px;
+	width: 16px;
+	margin-top: -10px;
+	font-size: 24px;
+	cursor: pointer;
+}
+#toasts .nasty-toast p {
+	padding: 10px;
+	margin: 0;
+}
+
+
+.form-floating select.form-select {
+    padding: 1.625rem 0.75rem 0.625rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0;
+    transition: border-color .15sease-in-out, box-shadow .15sease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.form-floating select.form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
+    outline: 0;
 }

@@ -1,0 +1,4 @@
+*** NastyMaps changelog ***
+
+2025-03-31 - version 1.0
+    - Released the first version of the plugin.

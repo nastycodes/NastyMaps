@@ -1,0 +1,19 @@
+{% extends "page.twig" %}
+
+{% block content %}
+    {% if messages %}
+        <!-- Alerts -->
+        <section id="settings-alerts" class="nastymaps-section my-4">
+            <div class="nastymaps-wrap">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.type }} alert-dismissible fade show" role="alert">
+                        {{ message.message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- Content -->
+{% endblock %}

@@ -19,6 +19,36 @@
  */
 
 /**
+ * Gets the penultimate key of an array.
+ * 
+ * @param array $array The input array
+ * @return mixed The penultimate key or null if it doesn't exist
+ */
+function array_key_penultimate($array) {
+	if (!is_array($array) || count($array) < 2) {
+		return null;
+	}
+	$keys = array_keys($array);
+	return $keys[count($keys) - 2];
+}
+
+/**
+ * Extracts the value of a key from an array and unsets it.
+ * 
+ * @param array $array The input array
+ * @param string $key The key to extract
+ * @return mixed The value of the key or null if it doesn't exist
+ */
+function array_extract_key(&$array, $key) {
+	if (!is_array($array) || !array_key_exists($key, $array)) {
+		return null;
+	}
+	$value = $array[$key];
+	unset($array[$key]);
+	return $value;
+}
+
+/**
  * Gets image-url for single/multiple image-id's
  * 
  * @param int|array $img image-id, or array of image id's.
@@ -63,36 +93,129 @@ function nastymaps_get_between($val, $begin, $end) {
 /**
  * Gets all settings from given table.
  * 
- * @param string $table Name of the database table
  * @return mixed Array of settings or false
  */
-function haendlersuche_get_settings($table) {
+function nastymaps_get_settings() {
 	global $wpdb;
-	
-	if (!empty($table)) {
-		return $wpdb->get_results("SELECT * FROM `" . $wpdb->prefix . $table . "`");
-	}
-	return false;
+	return $wpdb->get_results("SELECT * FROM `" . $wpdb->prefix . "nastymaps_setting`");
 }
 
 /**
  * Updates setting from given table.
  * 
  * @param array $settings Array of settings to be updated
- * @param string $table Name of the database table
+ * @return bool True if all settings are updated, otherwise false
  */
-function haendlersuche_update_settings($settings, $table) {
+function nastymaps_update_settings($settings) {
 	global $wpdb;
 
 	$res = true;
 	foreach ((array) $settings as $key => $value) {
-		$updateRes = $wpdb->update($wpdb->prefix . $table, ['value' => $value], ['name' => $key]);
+		$updateRes = $wpdb->update($wpdb->prefix . "nastymaps_setting", ['value' => $value], ['name' => $key]);
 		if ($updateRes === false) {
 			$res = false;
 		}
 	}
 	
 	return $res;
+}
+
+/**
+ * Gets all metaboxes
+ * 
+ * @return mixed Array of metaboxes or false
+ */
+function nastymaps_get_metaboxes() {
+	global $wpdb;
+	
+	return $wpdb->get_results("SELECT * FROM `" . $wpdb->prefix . "nastymaps_metabox`");
+}
+
+/**
+ * Adds a metabox
+ * 
+ * @param array $metabox Array of metabox data
+ * @return bool True if metabox is added, otherwise false
+ */
+function nastymaps_add_metabox($metabox) {
+	global $wpdb;
+	
+	return $wpdb->insert($wpdb->prefix . "nastymaps_metabox", $metabox);
+}
+
+/**
+ * Edits a metabox
+ * 
+ * @param array $metabox Array of metabox data
+ * @return bool True if metabox is edited, otherwise false
+ */
+function nastymaps_edit_metabox($metabox) {
+	global $wpdb;
+	
+	return $wpdb->update($wpdb->prefix . "nastymaps_metabox", $metabox, ['id' => $metabox['id']]);
+}
+
+/**
+ * Deletes a metabox
+ * 
+ * @param int $id ID of the metabox
+ * @return bool True if metabox is deleted, otherwise false
+ */
+function nastymaps_delete_metabox($id) {
+	global $wpdb;
+	
+	return $wpdb->delete($wpdb->prefix . "nastymaps_metabox", ['id' => $id]);
+}
+
+/**
+ * Gets all custom fields
+ * 
+ * @param int optional $metabox_id ID of the metabox
+ * @return mixed Array of custom fields or false
+ */
+function nastymaps_get_custom_fields($id = null) {
+	global $wpdb;
+	
+	if ($id !== null) {
+		return $wpdb->get_results("SELECT * FROM `" . $wpdb->prefix . "nastymaps_custom_field` WHERE metabox_id = " . $id);
+	}
+	return $wpdb->get_results("SELECT * FROM `" . $wpdb->prefix . "nastymaps_custom_field`");
+}
+
+/**
+ * Adds a custom field
+ * 
+ * @param array $custom_field Array of custom field data
+ * @return bool True if custom field is added, otherwise false
+ */
+function nastymaps_add_custom_field($custom_field) {
+	global $wpdb;
+	
+	return $wpdb->insert($wpdb->prefix . "nastymaps_custom_field", $custom_field);
+}
+
+/**
+ * Edits a custom field
+ * 
+ * @param array $custom_field Array of custom field data
+ * @return bool True if custom field is edited, otherwise false
+ */
+function nastymaps_edit_custom_field($custom_field) {
+	global $wpdb;
+	
+	return $wpdb->update($wpdb->prefix . "nastymaps_custom_field", $custom_field, ['id' => $custom_field['id']]);
+}
+
+/**
+ * Deletes a custom field
+ * 
+ * @param int $id ID of the custom field
+ * @return bool True if custom field is deleted, otherwise false
+ */
+function nastymaps_delete_custom_field($id) {
+	global $wpdb;
+	
+	return $wpdb->delete($wpdb->prefix . "nastymaps_custom_field", ['id' => $id]);
 }
 
 /**

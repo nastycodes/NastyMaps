@@ -1,0 +1,27 @@
+<div class="header-wrap nastymaps-wrap">
+	<div class="title">
+		<div class="outer-title-wrap">
+			<a class="nastymaps-logo" href="{{ page_plugin }}">
+				<img class="logo-img" src="{{ plugin_url }}assets/img/logo.svg" alt="{{ nastymaps_title }} Logo" draggable="false">
+			</a>
+			<div class="title-wrap">
+				<div class="inner-title-wrap mb-2">
+					<h1 class="nastymaps-title">{{ nastymaps_title }}</h1>
+					<span class="nastymaps-version">{{ nastymaps_version }}</span>
+				</div>
+			</div>
+		</div>
+		<div class="link-wrap">
+			<a class="support-link" href="mailto:info@nasty.codes">Feedback / Support</a>
+		</div>
+	</div>
+	<h2 class="nav-tab-wrapper">
+		<a class="nav-tab{{ page_dashboard_active }}" href="{{ page_dashboard_url }}">{{ page_dashboard_title }}</a>
+		<a class="nav-tab{{ page_maps_active }}" href="{{ page_maps_url }}">{{ page_maps_title }}</a>
+		<a class="nav-tab{{ page_templates_active }}" href="{{ page_templates_url }}">{{ page_templates_title }}</a>
+		<a class="nav-tab{{ page_settings_active }}" href="{{ page_settings_url }}">{{ page_settings_title }}</a>
+		<a class="nav-tab{{ page_extensions_active }}" href="{{ page_extensions_url }}">{{ page_extensions_title }}</a>
+	</h2>
+</div>
+<div id="toasts"></div>
+{% block content %}{% endblock %}

@@ -58,8 +58,7 @@ class NastyMaps_Controller {
 		}
 
 		self::real_include($slug, [
-			implode(DIRECTORY_SEPARATOR, [NASTYMAPS_VIEW_PATH, "HEADER.php"]),
-			implode(DIRECTORY_SEPARATOR, [NASTYMAPS_VIEW_PATH, "$slug.php"])
+			implode(DIRECTORY_SEPARATOR, [NASTYMAPS_PAGES_PATH, $slug, "controller.php"]),
 		]);
 	}
 }

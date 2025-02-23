@@ -38,8 +38,8 @@ class NastyMaps_Loader {
 	 * @var array $files
 	 */
 	private $files = [
-		'NASTYMAPS_CONTROLLER' => NASTYMAPS_CONTROLLER_PATH . DIRECTORY_SEPARATOR . "controller.php",
-		'NASTYMAPS_WORDPRESS' => NASTYMAPS_WORDPRESS_PATH . DIRECTORY_SEPARATOR . "wordpress.php"
+		'NASTYMAPS_CONTROLLER' => NASTYMAPS_INCLUDES_PATH . "/controller/controller.php",
+		'NASTYMAPS_WORDPRESS' => NASTYMAPS_INCLUDES_PATH . "/wordpress/wordpress.php"
 	];
 
 	/**

@@ -38,7 +38,6 @@ define('NASTYMAPS_DB_TABLES', [
         'template_id'   => 'mediumint(9) NOT NULL,',
         'name'          => 'varchar(255) NOT NULL UNIQUE,',
         'PRIMARY'       => 'KEY (id)',
-        'FOREIGN'       => 'KEY (template_id)'
     ],
     'nastymaps_map_setting' => [
         'id'            => 'mediumint(9) NOT NULL AUTO_INCREMENT,',
@@ -46,7 +45,6 @@ define('NASTYMAPS_DB_TABLES', [
         'name'          => 'varchar(255) NOT NULL UNIQUE,',
         'value'         => 'text NOT NULL,',
         'PRIMARY'       => 'KEY (id)',
-        'FOREIGN'       => 'KEY (map_id)'
     ],
     'nastymaps_metabox' => [
         'id'            => 'mediumint(9) NOT NULL AUTO_INCREMENT,',
@@ -61,12 +59,105 @@ define('NASTYMAPS_DB_TABLES', [
         'unique_id'     => 'varchar(128) NOT NULL UNIQUE,',
         'name'          => 'varchar(255) NOT NULL,',
         'PRIMARY'       => 'KEY (id)',
-        'FOREIGN'       => 'KEY (metabox_id)'
     ],
 ]);
 
 // plugin tables data
-define('NASTYMAPS_DB_DATA', []);
+define('NASTYMAPS_DB_DATA', [
+    'nastymaps_setting' => [
+        [
+            'label' => "License key",
+            'name' => "license_key",
+            'value' => "",
+            'description' => "The license key to activate the plugin." 
+        ],
+        [
+            'label' => "Domain",
+            'name' => "license_domain",
+            'value' => "",
+            'description' => "The domain linked to the license key."
+        ]
+    ],
+    'nastymaps_metabox' => [
+        [
+            'unique_id' => "location-address",
+            'name' => "Address",
+            'callback' => "metabox_location_address"
+        ],
+        [
+            'unique_id' => "location-contact",
+            'name' => "Contact",
+            'callback' => "metabox_location_contact"
+        ],
+        [
+            'unique_id' => "location-geolocation",
+            'name' => "Geolocation",
+            'callback' => "metabox_location_geolocation"
+        ]
+    ],
+    'nastymaps_custom_field' => [
+        [
+            'metabox_id' => 1,
+            'unique_id' => "nastymaps-address-company",
+            'name' => "Name",
+        ],
+        [
+            'metabox_id' => 1,
+            'unique_id' => "nsatymaps-address-company-extra",
+            'name' => "Extra",
+        ],
+        [
+            'metabox_id' => 1,
+            'unique_id' => "nastymaps-address-street",
+            'name' => "Street",
+        ],
+        [
+            'metabox_id' => 1,
+            'unique_id' => "nastymaps-address-zipcode",
+            'name' => "Zip",
+        ],
+        [
+            'metabox_id' => 1,
+            'unique_id' => "nastymaps-address-city",
+            'name' => "City",
+        ],
+        [
+            'metabox_id' => 1,
+            'unique_id' => "nastymaps-address-country",
+            'name' => "Country",
+        ],
+        [
+            'metabox_id' => 2,
+            'unique_id' => "nastymaps-contact-phone",
+            'name' => "Phone",
+        ],
+        [
+            'metabox_id' => 2,
+            'unique_id' => "nastymaps-contact-fax",
+            'name' => "Fax",
+        ],
+        [
+            'metabox_id' => 2,
+            'unique_id' => "nastymaps-contact-mail",
+            'name' => "Mail",
+        ],
+        [
+            'metabox_id' => 2,
+            'unique_id' => "nastymaps-contact-web",
+            'name' => "Web",
+        ],
+        [
+            'metabox_id' => 3,
+            'unique_id' => "nastymaps-geolocation-lat",
+            'name' => "Latitude",
+        ],
+        [
+            'metabox_id' => 3,
+            'unique_id' => "nastymaps-geolocation-lng",
+            'name' => "Longitude",
+        ]
+    ]
+]);
 
 // plugin debug
 define('NASTYMAPS_DEBUG', false);
@@ -89,6 +180,9 @@ define('NASTYMAPS_CORE_PATH', NASTYMAPS_PLUGIN_DIR . "/core");
 // assets path
 define('NASTYMAPS_ASSETS_PATH', NASTYMAPS_PLUGIN_DIR . "/assets");
 
+// vendor path
+define('NASTYMAPS_VENDOR_PATH', NASTYMAPS_PLUGIN_DIR . "/vendor");
+
 // controller path
 define('NASTYMAPS_CONTROLLER_PATH', NASTYMAPS_CORE_PATH . "/controller");
 
@@ -98,8 +192,14 @@ define('NASTYMAPS_WORDPRESS_PATH', NASTYMAPS_CORE_PATH . "/wordpress");
 // classes path
 define('NASTYMAPS_CLASSES_PATH', NASTYMAPS_CORE_PATH . "/classes");
 
+// include path
+define('NASTYMAPS_INCLUDES_PATH', NASTYMAPS_CORE_PATH . "/includes");
+
 // view path
 define('NASTYMAPS_VIEW_PATH', NASTYMAPS_CORE_PATH . "/view");
+
+// pages path
+define('NASTYMAPS_PAGES_PATH', NASTYMAPS_CORE_PATH . "/pages");
 
 // Loaded
 define('NASTYMAPS_CONSTANTS_LOADED', true);
