@@ -38,8 +38,6 @@ $nastymaps_page = new NastyMaps_Page($NASTYMAPS_PAGE_NAME, [
     'page_settings_url' => admin_url("admin.php?page=".NASTYMAPS_TEXT_DOMAIN."-settings"),
     'page_extensions_active' => (in_array($NASTYMAPS_PAGE_NAME, ["extensions", "import", "export"]) ? " nav-tab-active" : ""),
     'page_extensions_url' => admin_url("admin.php?page=".NASTYMAPS_TEXT_DOMAIN."-extensions"),
-    'page_docs_active' => ($NASTYMAPS_PAGE_NAME == "docs" ? " nav-tab-active" : ""),
-    'page_docs_url' => admin_url("admin.php?page=".NASTYMAPS_TEXT_DOMAIN."-docs"),
     'page_about_active' => ($NASTYMAPS_PAGE_NAME == "about" ? " nav-tab-active" : ""),
     'page_about_url' => admin_url("admin.php?page=".NASTYMAPS_TEXT_DOMAIN."-about"),
 ]);

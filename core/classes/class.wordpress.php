@@ -48,7 +48,6 @@ class NastyMaps_WordPress {
 		['title' => "Extensions", 'slug' => "extensions", 'view' => "nastymaps_page_nastymaps-extensions"],
 		['title' => "Settings", 'slug' => "settings", 'view' => "nastymaps_page_nastymaps-settings"],
 		['title' => "About", 'slug' => "about", 'view' => "nastymaps_page_nastymaps-about"],
-		['title' => "Docs", 'slug' => "docs", 'view' => "nastymaps_page_nastymaps-docs"],
 		// ['title' => "Debug", 'slug' => "debug", 'view' => "nastymaps_page_nastymaps-debug"]
 	];
 
