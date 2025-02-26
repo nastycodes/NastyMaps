@@ -168,6 +168,134 @@ function nastymaps_delete_metabox($id) {
 }
 
 /**
+ * Gets all maps
+ * 
+ * @return mixed Array of maps or false
+ */
+function nastymaps_get_maps() {
+	global $wpdb;
+	
+	$maps = $wpdb->get_results("SELECT * FROM `" . $wpdb->prefix . "nastymaps_map`");
+	if (is_array($maps) && count($maps) > 0) {
+		foreach ((array) $maps as $map) {
+			$map->settings = $wpdb->get_results("SELECT * FROM `" . $wpdb->prefix . "nastymaps_map_setting` WHERE map_id = " . $map->id);
+		}
+	}
+	return $maps;
+}
+
+/**
+ * Adds a map
+ * 
+ * @param array $map Array of map data
+ * @return bool True if map is added, otherwise false
+ */
+function nastymaps_add_map($map) {
+	global $wpdb;
+	
+	$wpdb->insert($wpdb->prefix . "nastymaps_map", $map);
+	$map_id = $wpdb->insert_id;
+	
+	if (isset($map['settings']) && is_array($map['settings']) && count($map['settings']) > 0) {
+		foreach ((array) $map['settings'] as $setting) {
+			$setting['map_id'] = $map_id;
+			$wpdb->insert($wpdb->prefix . "nastymaps_map_setting", $setting);
+		}
+	}
+	
+	return true;
+}
+
+/**
+ * Edits a map
+ * 
+ * @param array $map Array of map data
+ * @return bool True if map is edited, otherwise false
+ */
+function nastymaps_edit_map($map) {
+	global $wpdb;
+	
+	$wpdb->update($wpdb->prefix . "nastymaps_map", $map, ['id' => $map['id']]);
+	
+	if (isset($map['settings']) && is_array($map['settings']) && count($map['settings']) > 0) {
+		foreach ((array) $map['settings'] as $setting) {
+			$wpdb->update($wpdb->prefix . "nastymaps_map_setting", $setting, ['id' => $setting['id']]);
+		}
+	}
+	
+	return true;
+}
+
+/**
+ * Deletes a map
+ * 
+ * @param int $id ID of the map
+ * @return bool True if map is deleted, otherwise false
+ */
+function nastymaps_delete_map($id) {
+	global $wpdb;
+	
+	$wpdb->delete($wpdb->prefix . "nastymaps_map_setting", ['map_id' => $id]);
+	$wpdb->delete($wpdb->prefix . "nastymaps_map", ['id' => $id]);
+	
+	return true;
+}
+
+/**
+ * Gets all templates
+ * 
+ * @return mixed Array of templates or false
+ */
+function nastymaps_get_templates() {
+	global $wpdb;
+	
+	return $wpdb->get_results("SELECT * FROM `" . $wpdb->prefix . "nastymaps_template`");
+}
+
+/**
+ * Adds a template
+ * 
+ * @param array $template Array of template data
+ * @return bool True if template is added, otherwise false
+ */
+function nastymaps_add_template($template) {
+	global $wpdb;
+	
+	return $wpdb->insert($wpdb->prefix . "nastymaps_template", $template);
+}
+
+/**
+ * Edits a template
+ * 
+ * @param array $template Array of template data
+ * @return bool True if template is edited, otherwise false
+ */
+function nastymaps_edit_template($template) {
+	global $wpdb;
+	
+	$template['location_html'] = wp_unslash($template['location_html']);
+	$template['location_css'] = wp_unslash($template['location_css']);
+	$template['location_js'] = wp_unslash($template['location_js']);
+	$template['map_html'] = wp_unslash($template['map_html']);
+	$template['map_css'] = wp_unslash($template['map_css']);
+	$template['map_js'] = wp_unslash($template['map_js']);
+
+	return $wpdb->update($wpdb->prefix . "nastymaps_template", $template, ['id' => $template['id']]);
+}
+
+/**
+ * Deletes a template
+ * 
+ * @param int $id ID of the template
+ * @return bool True if template is deleted, otherwise false
+ */
+function nastymaps_delete_template($id) {
+	global $wpdb;
+	
+	return $wpdb->delete($wpdb->prefix . "nastymaps_template", ['id' => $id]);
+}
+
+/**
  * Gets all custom fields
  * 
  * @param int optional $metabox_id ID of the metabox
@@ -216,6 +344,53 @@ function nastymaps_delete_custom_field($id) {
 	global $wpdb;
 	
 	return $wpdb->delete($wpdb->prefix . "nastymaps_custom_field", ['id' => $id]);
+}
+
+/**
+ * Gets all variables
+ * 
+ * @return mixed Array of variables or false
+ */
+function nastymaps_get_variables() {
+	global $wpdb;
+	
+	return $wpdb->get_results("SELECT * FROM `" . $wpdb->prefix . "nastymaps_variable`");
+}
+
+/**
+ * Adds a variable
+ * 
+ * @param array $variable Array of variable data
+ * @return bool True if variable is added, otherwise false
+ */
+function nastymaps_add_variable($variable) {
+	global $wpdb;
+	
+	return $wpdb->insert($wpdb->prefix . "nastymaps_variable", $variable);
+}
+
+/**
+ * Edits a variable
+ * 
+ * @param array $variable Array of variable data
+ * @return bool True if variable is edited, otherwise false
+ */
+function nastymaps_edit_variable($variable) {
+	global $wpdb;
+	
+	return $wpdb->update($wpdb->prefix . "nastymaps_variable", $variable, ['id' => $variable['id']]);
+}
+
+/**
+ * Deletes a variable
+ * 
+ * @param int $id ID of the variable
+ * @return bool True if variable is deleted, otherwise false
+ */
+function nastymaps_delete_variable($id) {
+	global $wpdb;
+	
+	return $wpdb->delete($wpdb->prefix . "nastymaps_variable", ['id' => $id]);
 }
 
 /**

@@ -45,10 +45,22 @@ class NastyMaps_WordPress {
 		['title' => "Dashboard", 'slug' => "dashboard", 'view' => "toplevel_page_nastymaps"],
 		['title' => "Maps", 'slug' => "maps", 'view' => "nastymaps_page_nastymaps-maps"],
 		['title' => "Templates", 'slug' => "templates", 'view' => "nastymaps_page_nastymaps-templates"],
-		['title' => "Settings", 'slug' => "settings", 'view' => "nastymaps_page_nastymaps-settings"],
 		['title' => "Extensions", 'slug' => "extensions", 'view' => "nastymaps_page_nastymaps-extensions"],
+		['title' => "Settings", 'slug' => "settings", 'view' => "nastymaps_page_nastymaps-settings"],
+		['title' => "About", 'slug' => "about", 'view' => "nastymaps_page_nastymaps-about"],
+		['title' => "Docs", 'slug' => "docs", 'view' => "nastymaps_page_nastymaps-docs"],
 		// ['title' => "Debug", 'slug' => "debug", 'view' => "nastymaps_page_nastymaps-debug"]
 	];
+
+	/**
+	 * @var string $subpage_prefix
+	 */
+	public $subpage_prefix = "nastymaps_page_nastymaps-";
+
+	/**
+	 * @var array $extensions
+	 */
+	private $extensions = [];
 
 	/**
 	 * Constructor
@@ -65,17 +77,21 @@ class NastyMaps_WordPress {
 		add_action('save_post', [$this, "save_post_type_metaboxes"]);
 
 		add_action('init', [$this, "add_custom_post_type"]);
-		add_action('init', [$this, "add_plugin_db_tables"]);
 
-		add_action('activated_plugin', [$this, "add_plugin_db_data"]);
+		add_action('init', [$this, "install_plugin"]);
 
 		// plugins list page actions links.
 		add_filter('plugin_action_links', [$this, 'add_plugin_action_links'], 10, 2);
 
+		// get custom fields
 		$custom_fields = nastymaps_get_custom_fields();
 		$this->custom_fields = array_map(function($field) {
 			return $field->unique_id;
 		}, $custom_fields);
+
+		// get extensions
+		$extensions = $this->get_extensions();
+		$this->init_extensions();
 	}
 
 	/**
@@ -127,38 +143,104 @@ class NastyMaps_WordPress {
 	}
 
 	/**
+	 * Gets all extensions
+	 * 
+	 * @return array
+	 * @throws NastyMaps_Not_Found_Exception
+	 */
+	public function get_extensions() {
+		if (!empty($this->extensions)) {
+			return $this->extensions;
+		}
+
+		// Get the extension file
+		$extensions_file = NASTYMAPS_EXTENSIONS_PATH . "/extensions.json";
+		if (!file_exists($extensions_file)) {
+			throw new NastyMaps_Not_Found_Exception("Extensions file not found.");
+		}
+
+		// Get the extensions
+		$extensions = json_decode(file_get_contents($extensions_file), true);
+
+		// Assign the extensions
+		$this->extensions = $extensions;
+		return $this->extensions;
+	}
+
+	/**
+	 * Initializes all extensions
+	 * 
+	 * @return void
+	 */
+	public function init_extensions() {
+		$slug = NASTYMAPS_TEXT_DOMAIN . '-extension-';
+		$menuIndex = 4;
+		foreach ((array) $this->extensions as $extension) {
+			if (!isset($extension['controller']) || !file_exists(NASTYMAPS_EXTENSIONS_PATH . $extension['controller'])) {
+				continue;
+			}
+
+			add_action('admin_menu', function() use ($slug, $extension, $menuIndex) {
+				add_submenu_page(
+					NASTYMAPS_TEXT_DOMAIN,
+					$extension['title'],
+					"<b>EXT</b> ".$extension['title'],
+					"manage_options",
+					$slug . $extension['slug'],
+					[$this, "load_view"],
+					$menuIndex
+				);
+			});
+
+			$menuIndex++;
+		}
+	}
+
+	/**
 	 * Enqueues the backend assets.
 	 * 
 	 * @param mixed $hook
 	 * @return void
 	 */
 	public function enqueue_backend_assets($hook) {
+		// Check if the current hook is in the views array
+		if (in_array($hook, array_column($this->pages, 'view')) || in_array($hook, array_column($this->extensions, 'view'))) {
+			// Vendor styles
+			wp_register_style(NASTYMAPS_TEXT_DOMAIN . "-bootstrap", NASTYMAPS_PLUGIN_URL . "assets/vendor/bootstrap-5.2.3/css/bootstrap.min.css");
+			wp_enqueue_style(NASTYMAPS_TEXT_DOMAIN . "-bootstrap");
+			wp_register_style(NASTYMAPS_TEXT_DOMAIN . "-datatables", NASTYMAPS_PLUGIN_URL . "assets/vendor/datatables-bs5-2.2.2/css/datatables.min.css");
+			wp_enqueue_style(NASTYMAPS_TEXT_DOMAIN . "-datatables");
+			wp_register_style(NASTYMAPS_TEXT_DOMAIN . "-codemirror", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/codemirror.min.css");
+			wp_enqueue_style(NASTYMAPS_TEXT_DOMAIN . "-codemirror");
+			/* wp_register_style(NASTYMAPS_TEXT_DOMAIN . "-codemirror-theme", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/theme/vscode-dark.css");
+			wp_enqueue_style(NASTYMAPS_TEXT_DOMAIN . "-codemirror-theme"); */
+			wp_register_style(NASTYMAPS_TEXT_DOMAIN . "-codemirror-addon-fullscreen", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/addon/display/fullscreen.css");
+			wp_enqueue_style(NASTYMAPS_TEXT_DOMAIN . "-codemirror-addon-fullscreen");
+
+			// WordPress media
+			wp_enqueue_media();
+
+			// Vendor scripts
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-jquery-js", NASTYMAPS_PLUGIN_URL . "assets/vendor/jquery-3.7.1/jquery.min.js", [], "3.7.1", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-bootstrap-js", NASTYMAPS_PLUGIN_URL . "assets/vendor/bootstrap-5.2.3/js/bootstrap.min.js", [], "5.2.3", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-datatables-js", NASTYMAPS_PLUGIN_URL . "assets/vendor/datatables-bs5-2.2.2/js/datatables.min.js", [], "2.2.2", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-codemirror-js", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/codemirror.min.js", [], "5.65.18", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-codemirror-addon-comment", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/addon/comment/comment.js", [], "5.65.18", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-codemirror-addon-fullscreen", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/addon/display/fullscreen.js", [], "5.65.18", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-codemirror-mode-clike", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/mode/clike/clike.min.js", [], "5.65.18", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-codemirror-mode-css", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/mode/css/css.min.js", [], "5.65.18", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-codemirror-mode-htmlmixed", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/mode/htmlmixed/htmlmixed.min.js", [], "5.65.18", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-codemirror-mode-javascript", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/mode/javascript/javascript.min.js", [], "5.65.18", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-codemirror-mode-php", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/mode/php/php.min.js", [], "5.65.18", true);
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-codemirror-mode-xml", NASTYMAPS_PLUGIN_URL . "assets/vendor/codemirror-5.65.18/mode/xml/xml.min.js", [], "5.65.18", true);
+
+			// NastyMaps scripts
+			wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-scripts", NASTYMAPS_PLUGIN_URL . "assets/js/scripts.js", [], "1.0.0", true);
+		}
+		
 		// NastyMaps styles
 		wp_register_style(NASTYMAPS_TEXT_DOMAIN . "-styles", NASTYMAPS_PLUGIN_URL . 'assets/css/styles.css');
 		wp_enqueue_style(NASTYMAPS_TEXT_DOMAIN . "-styles");
-
-		// Check if the current hook is in the views array
-		$views = array_column($this->pages, 'view');
-		if (!in_array($hook, $views)) {
-			return;
-		}
-		
-		// Vendor styles
-		wp_register_style(NASTYMAPS_TEXT_DOMAIN . "-bootstrap-css", NASTYMAPS_PLUGIN_URL . "assets/vendor/bootstrap-5.2.3/css/bootstrap.min.css");
-		wp_enqueue_style(NASTYMAPS_TEXT_DOMAIN . "-bootstrap-css");
-		wp_register_style(NASTYMAPS_TEXT_DOMAIN . "-datatables-css", NASTYMAPS_PLUGIN_URL . "assets/vendor/datatables-bs5-2.2.2/css/datatables.min.css");
-		wp_enqueue_style(NASTYMAPS_TEXT_DOMAIN . "-datatables-css");
-
-		// WordPress media
-		wp_enqueue_media();
-
-		// Vendor scripts
-		wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-jquery-js", NASTYMAPS_PLUGIN_URL . "assets/vendor/jquery-3.7.1/jquery.min.js", [], "3.7.1", true);
-		wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-bootstrap-js", NASTYMAPS_PLUGIN_URL . "assets/vendor/bootstrap-5.2.3/js/bootstrap.min.js", [], "5.2.3", true);
-		wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-datatables-js", NASTYMAPS_PLUGIN_URL . "assets/vendor/datatables-bs5-2.2.2/js/datatables.min.js", [], "2.2.2", true);
-
-		// NastyMaps scripts
-		wp_enqueue_script(NASTYMAPS_TEXT_DOMAIN . "-scripts", NASTYMAPS_PLUGIN_URL . "assets/js/scripts.js", [], "1.0.0", true);
 	}
 
 	/**
@@ -211,9 +293,18 @@ class NastyMaps_WordPress {
 			return $page['view'] === current_filter();
 		});
 		$page = reset($filtered_pages);
-
 		if ($page) {
-			$this->controller->include_view($page['slug']);
+			$this->controller->include_view($this, $page['slug']);
+			return;
+		}
+
+		$filtered_extensions = array_filter($this->extensions, function($extension) {
+			return $extension['view'] == current_filter();
+		});
+		$extension = reset($filtered_extensions);
+		if ($extension) {
+			$this->controller->include_view($this, $extension['slug']);
+			return;
 		}
 	}
 
@@ -316,6 +407,22 @@ class NastyMaps_WordPress {
 			}
 		}
 	}
+	
+	/**
+	 * Installs the plugin.
+	 * 
+	 * @return void
+	 */
+	public function install_plugin() {
+		if (get_option('nastymaps_installed')) {
+			return;
+		}
+
+		$this->add_plugin_db_tables();
+		$this->add_plugin_db_data();
+
+		add_option('nastymaps_installed', true);
+	}
 
 	/**
 	 * Creates the database tables.
@@ -354,8 +461,12 @@ class NastyMaps_WordPress {
 
 		foreach ((array) NASTYMAPS_DB_DATA as $tableKey => $rows) {
 			foreach ((array) $rows as $row) {
-				// check if row exists by checking for the unique_id
-				$exists = $wpdb->get_row("SELECT * FROM `" . $wpdb->prefix . $tableKey . "` WHERE `name` = '" . $row['name'] . "'");
+				if ($tableKey == "nastymaps_setting") {
+					$exists = $wpdb->get_row("SELECT * FROM `" . $wpdb->prefix . $tableKey . "` WHERE `name` = '" . $row['name'] . "'");
+				} else {
+					$exists = $wpdb->get_row("SELECT * FROM `" . $wpdb->prefix . $tableKey . "` WHERE `unique_id` = '" . $row['unique_id'] . "'");
+				}
+
 				if ($exists) {
 					continue;
 				}

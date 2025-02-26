@@ -3,7 +3,7 @@
 {% block content %}
     {% if messages %}
         <!-- Alerts -->
-        <section id="settings-alerts" class="nastymaps-section my-4">
+        <section id="templates-alerts" class="nastymaps-section my-4">
             <div class="nastymaps-wrap">
                 {% for message in messages %}
                     <div class="alert alert-{{ message.type }} alert-dismissible fade show" role="alert">
@@ -15,5 +15,495 @@
         </section>
     {% endif %}
 
-    <!-- Content -->
+    <!-- Templates -->
+    <section id="templates" class="nastymaps-section my-4">
+        <div class="nastymaps-wrap">
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <h2>{{ "Templates"|__ }}</h2>
+                </div>
+                <div class="col-12 col-md-4 col-xl-3 col-xxl-4">
+                    <div class="section-desc d-flex flex-column me-lg-3 me-xl-4 me-xxl-5">
+                        <div class="desc-row alert alert-info d-flex flex-row gap-3">
+                            <div class="icon-wrap">
+                                <img src="{{ plugin_url }}assets/img/icons/material-icons-info.svg" alt="Info" width="22" height="22" draggable="false">
+                            </div>
+                            <div class="text-wrap">
+                                <span>{{ "Templates serve the purpose to display content for a created map"|__ }}.</span>
+                                <span>{{ "They are used to define the output for the locations found under"|__ }} <a class="text-decoration-none fw-bold text-info" href="{{ page_location }}" target="_blank">{{ "Locations"|__ }}</a> {{ "as well as defining the maps location popup"|__ }}.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-8 col-xl-9 col-xxl-8">
+                    {% if templates %}
+                        <table id="templates-table" class="table table-hover" data-search-icon="{{ plugin_url }}assets/img/icons/material-icons-search.svg" data-templates-icon="{{ plugin_url }}assets/img/icons/material-icons-desktop-landscape.svg">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ "Name"|__ }}</th>
+                                    <th scope="col">{{ "Description"|__ }}</th>
+                                    <th scope="col" class="text-end">{{ "Actions"|__ }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, template in templates %}
+                                    <tr>
+                                        <td>{{ template.name }}</td>
+                                        <td>{{ template.description }}</td>
+                                        <td>
+                                            <div class="button-group gap-1 d-flex flex-row">
+                                                <button class="btn bg-nastymaps-action text-light btn-sm d-flex align-items-center justify-content-center ms-auto" type="button" data-bs-toggle="modal" data-bs-target="#template-{{ key }}-edit" aria-controls="template-{{ key }}-edit">
+                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-edit.svg" alt="Edit" width="16" height="16">
+                                                    <span class="ms-2">{{ "Edit"|__ }}</span>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" type="button" data-bs-toggle="modal" data-bs-target="#template-{{ key }}-delete" aria-controls="template-{{ key }}-delete">
+                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-delete.svg" alt="Delete" width="16" height="16">
+                                                    <span class="ms-2">{{ "Delete"|__ }}</span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    <div class="button-wrapper d-flex align-items-center mt-3">
+                        <button class="btn bg-nastymaps-action text-light d-flex align-items-center justify-content-center w-100" type="button" data-bs-toggle="modal" data-bs-target="#template-add" aria-controls="template-add">
+                            <img src="{{ plugin_url }}assets/img/icons/material-icons-add.svg" alt="Add" width="20" height="20">
+                            <span class="ms-2">{{ "New template"|__ }}</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12">
+                    {% if templates %}
+                        {% for key, template in templates %}
+                            <div class="modal fade" id="template-{{ key }}-edit" tabindex="-1" aria-labelledby="template-{{ key }}-edit-label" aria-hidden="true">
+                                <div class="modal-dialog modal-xl modal-dialog-centered">
+                                    <form class="dynamic-form" id="nastymaps-template-{{ key }}-edit-form" method="POST">
+                                        <input type="hidden" name="template[id]" value="{{ template.id }}">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ "Edit template"|__ }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-floating">
+                                                            <input type="text" id="template-{{ key }}-edit-name" name="template[name]" class="form-control" placeholder="" value="{{ template.name }}">
+                                                            <label for="template-{{ key }}-edit-name">{{ "Name"|__ }}</label>
+                                                            <p class="form-text">{{ "The name of the template"|__ }}.</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-floating">
+                                                            <input type="text" id="template-{{ key }}-edit-description" name="template[description]" class="form-control" placeholder="" value="{{ template.description }}">
+                                                            <label for="template-{{ key }}-edit-description">{{ "Description"|__ }}</label>
+                                                            <p class="form-text">{{ "The description of the template"|__ }}.</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 mt-4 mb-3">
+                                                        <div class="template-edit-variables-wrapper" id="template-{{ key }}-edit-variables-accordion">
+                                                            <div class="accordion-item">
+                                                                <div class="accordion-header d-flex align-items-center gap-3 mb-3" id="template-{{ key }}-edit-variables-heading">
+                                                                    <h5 class="mb-0">{{ "Variables"|__ }}</h5>
+                                                                    <ul class="nav nav-pills mb-0 ms-auto" id="template-{{ key }}-edit-pills-variables-tab" role="tablist">
+                                                                        <li class="nav-item mb-0 ms-2" role="presentation">
+                                                                            <button class="toggle-icon-button nav-link bg-nastymaps-action d-flex flex-row align-items-center gap-2 active border" type="button" data-bs-toggle="collapse" data-bs-target="#template-{{ key }}-edit-variables-collapse" aria-expanded="true" aria-controls="template-{{ key }}-edit-variables-collapse">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-down-light.svg" alt="Expand" width="16" height="16" class="icon-expand d-none">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-up-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                                <p class="mb-0" data-text="toggle" data-expand-text="Expand" data-collapse-text="Collapse">Collapse</p>
+                                                                            </button>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div id="template-{{ key }}-edit-variables-collapse" class="accordion-collapse collapse show" aria-labelledby="template-{{ key }}-edit-variables-heading" data-bs-parent="#template-{{ key }}-edit-variables-accordion">
+                                                                    <div class="accordion-body">
+                                                                        <div class="alert alert-info mb-0">
+                                                                            {% if variables %}
+                                                                                <div class="d-flex flex-row flex-wrap gap-2">
+                                                                                    {% for variable in variables %}
+                                                                                        <button class="variable-btn btn btn-info text-light d-flex align-items-center" title="{{ variable.unique_id }}" data-variable="{{ "{{"|raw }} {{ variable.unique_id }} {{ "}}"|raw }}" data-name="{{ variable.name }}">
+                                                                                            <img src="{{ plugin_url }}assets/img/icons/material-icons-content-paste-light.svg" alt="Copy" width="16" height="16">
+                                                                                            <span class="ms-2 text-sm">{{ variable.name }}</span>
+                                                                                        </button>
+                                                                                    {% endfor %}
+                                                                                </div>
+                                                                            {% else %}
+                                                                                <p>{{ "No variables available"|__ }}.</p>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 my-3">
+                                                        <div class="template-edit-location-wrapper" id="template-{{ key }}-edit-location-accordion">
+                                                            <div class="accordion-item">
+                                                                <div class="accordion-header d-flex align-items-center gap-3 mb-3" id="template-{{ key }}-edit-location-heading">
+                                                                    <h5 class="mb-0">{{ "Location"|__ }}</h5>
+                                                                    <ul class="nav nav-pills mb-0 ms-auto" id="template-{{ key }}-edit-pills-location-tab" role="tablist">
+                                                                        <li class="nav-item mb-0" role="presentation">
+                                                                            <button class="nav-link d-flex flex-row align-items-center gap-2 border active" id="template-{{ key }}-edit-pills-location-code-tab" data-bs-toggle="pill" data-bs-target="#template-{{ key }}-edit-pills-location-code" type="button" role="tab" aria-controls="template-{{ key }}-edit-pills-location-code" aria-selected="true">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-code-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                                Code
+                                                                            </button>
+                                                                        </li>
+                                                                        <li class="nav-item mb-0 ms-1" role="presentation">
+                                                                            <button class="nav-link d-flex flex-row align-items-center gap-2 border" id="template-{{ key }}-edit-pills-location-preview-tab" data-bs-toggle="pill" data-bs-target="#template-{{ key }}-edit-pills-location-preview" type="button" role="tab" aria-controls="template-{{ key }}-edit-pills-location-preview" aria-selected="false">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-visibility-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                                Preview
+                                                                            </button>
+                                                                        </li>
+                                                                        <li class="nav-item mb-0 ms-2" role="presentation">
+                                                                            <button class="toggle-icon-button nav-link bg-nastymaps-action d-flex flex-row align-items-center gap-2 active border" type="button" data-bs-toggle="collapse" data-bs-target="#template-{{ key }}-edit-location-collapse" aria-expanded="true" aria-controls="template-{{ key }}-edit-location-collapse">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-down-light.svg" alt="Expand" width="16" height="16" class="icon-expand d-none">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-up-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                                <p class="mb-0" data-text="toggle" data-expand-text="Expand" data-collapse-text="Collapse">Collapse</p>
+                                                                            </button>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div id="template-{{ key }}-edit-location-collapse" class="accordion-collapse collapse show" aria-labelledby="template-{{ key }}-edit-location-heading" data-bs-parent="#template-{{ key }}-edit-location-accordion">
+                                                                    <div class="accordion-body">
+                                                                        <div class="tab-content ps-4 pt-2 border-start" id="template-{{ key }}-edit-pills-location-tabContent">
+                                                                            <div class="tab-pane fade show active" id="template-{{ key }}-edit-pills-location-code" role="tabpanel" aria-labelledby="template-{{ key }}-edit-pills-location-code-tab" tabindex="0">
+                                                                                <div class="row mt-2">
+                                                                                    <div class="col-12">
+                                                                                        <div class="editor-wrap border-bottom">
+                                                                                            <textarea class="form-control nastymaps-editor" id="template-{{ key }}-edit-location-html" data-mode="application/x-httpd-php" name="template[location_html]" rows="10">{{ template.location_html }}</textarea>
+                                                                                        </div>
+                                                                                        <p class="form-text">{{ "The html for the location"|__ }}.</p>
+                                                                                    </div>
+                                                                                    <div class="col-12 col-lg-6">
+                                                                                        <div class="editor-wrap border-bottom">
+                                                                                            <textarea class="form-control nastymaps-editor" id="template-{{ key }}-edit-location-js" data-mode="javascript" name="template[location_js]" rows="10">{{ template.location_js }}</textarea>
+                                                                                        </div>
+                                                                                        <p class="form-text">{{ "The js for the location html"|__ }}.</p>
+                                                                                    </div>
+                                                                                    <div class="col-12 col-lg-6">
+                                                                                        <div class="editor-wrap border-bottom">
+                                                                                            <textarea class="form-control nastymaps-editor" id="template-{{ key }}-edit-location-css" data-mode="css" name="template[location_css]" rows="10">{{ template.location_css }}</textarea>
+                                                                                        </div>
+                                                                                        <p class="form-text">{{ "The css for the location html"|__ }}.</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="tab-pane fade" id="template-{{ key }}-edit-pills-location-preview" role="tabpanel" aria-labelledby="template-{{ key }}-edit-pills-location-preview-tab" tabindex="0">
+                                                                                <div class="preview-wrap border-bottom">
+                                                                                    <iframe id="template-{{ key }}-edit-location-preview" class="w-100" height="400" srcdoc=""></iframe>
+                                                                                </div>
+                                                                                <div class="preview-button-wrap py-3">
+                                                                                    <button class="btn bg-nastymaps-action text-light preview-refresh-btn d-flex align-items-center justify-content-center w-100" type="button" data-preview-selector="template-{{ key }}-edit-location-preview" data-html-selector="template-{{ key }}-edit-location-html" data-js-selector="template-{{ key }}-edit-location-js" data-css-selector="template-{{ key }}-edit-location-css" id="template-{{ key }}-edit-location-preview-refresh">
+                                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-sync-light.svg" alt="Refresh" class="me-2" width="20" height="20">
+                                                                                        {{ "Refresh preview"|__ }}
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="template-edit-map-wrapper" id="template-{{ key }}-edit-map-accordion">
+                                                            <div class="accordion-item">
+                                                                <div class="accordion-header d-flex align-items-center gap-3 mb-3" id="template-{{ key }}-edit-map-heading">
+                                                                    <h5 class="mb-0">{{ "Map"|__ }}</h5>
+                                                                    <ul class="nav nav-pills mb-0 ms-auto" id="template-{{ key }}-edit-pills-map-tab" role="tablist">
+                                                                        <li class="nav-item mb-0" role="presentation">
+                                                                            <button class="nav-link d-flex flex-row align-items-center gap-2 border active" id="template-{{ key }}-edit-pills-map-code-tab" data-bs-toggle="pill" data-bs-target="#template-{{ key }}-edit-pills-map-code" type="button" role="tab" aria-controls="template-{{ key }}-edit-pills-map-code" aria-selected="true">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-code-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                                Code
+                                                                            </button>
+                                                                        </li>
+                                                                        <li class="nav-item mb-0 ms-1" role="presentation">
+                                                                            <button class="nav-link d-flex flex-row align-items-center gap-2 border" id="template-{{ key }}-edit-pills-map-preview-tab" data-bs-toggle="pill" data-bs-target="#template-{{ key }}-edit-pills-map-preview" type="button" role="tab" aria-controls="template-{{ key }}-edit-pills-map-preview" aria-selected="false">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-visibility-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                                Preview
+                                                                            </button>
+                                                                        </li>
+                                                                        <li class="nav-item mb-0 ms-2" role="presentation">
+                                                                            <button class="toggle-icon-button nav-link bg-nastymaps-action d-flex flex-row align-items-center gap-2 active border" type="button" data-bs-toggle="collapse" data-bs-target="#template-{{ key }}-edit-map-collapse" aria-expanded="true" aria-controls="template-{{ key }}-edit-map-collapse">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-down-light.svg" alt="Expand" width="16" height="16" class="icon-expand d-none">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-up-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                                <p class="mb-0" data-text="toggle" data-expand-text="Expand" data-collapse-text="Collapse">Collapse</p>
+                                                                            </button>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div id="template-{{ key }}-edit-map-collapse" class="accordion-collapse collapse show" aria-labelledby="template-{{ key }}-edit-map-heading" data-bs-parent="#template-{{ key }}-edit-map-accordion">
+                                                                    <div class="accordion-body">
+                                                                        <div class="tab-content ps-4 pt-2 border-start" id="template-{{ key }}-edit-pills-map-tabContent">
+                                                                            <div class="tab-pane fade show active" id="template-{{ key }}-edit-pills-map-code" role="tabpanel" aria-labelledby="template-{{ key }}-edit-pills-map-code-tab" tabindex="0">
+                                                                                <div class="row mt-2">
+                                                                                    <div class="col-12">
+                                                                                        <div class="editor-wrap border-bottom">
+                                                                                            <textarea class="form-control nastymaps-editor" id="template-{{ key }}-edit-map-html" data-mode="application/x-httpd-php" name="template[map_html]" rows="10">{{ template.map_html }}</textarea>
+                                                                                        </div>
+                                                                                        <p class="form-text">{{ "The html for the map-popup"|__ }}.</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="tab-pane fade" id="template-{{ key }}-edit-pills-map-preview" role="tabpanel" aria-labelledby="template-{{ key }}-edit-pills-map-preview-tab" tabindex="0">
+                                                                                <div class="preview-wrap border-bottom">
+                                                                                    <div id="template-{{ key }}-edit-map-preview"></div>
+                                                                                </div>
+                                                                                <div class="preview-button-wrap py-3">
+                                                                                    <button class="btn bg-nastymaps-action text-light preview-refresh-btn d-flex align-items-center justify-content-center w-100" type="button" data-preview-selector="template-{{ key }}-edit-map-preview" data-html-selector="template-{{ key }}-edit-map-html" data-js-selector="template-{{ key }}-edit-map-js" data-css-selector="template-{{ key }}-edit-map-css" id="template-{{ key }}-edit-map-preview-refresh">
+                                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-sync-light.svg" alt="Refresh" width="20" height="20">
+                                                                                        <span class="ms-2">{{ "Refresh preview"|__ }}</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
+                                                <button type="submit" name="template[action]" value="edit" class="btn bg-nastymaps-action text-light">{{ "Save changes"|__ }}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="template-{{ key }}-delete" tabindex="-1" aria-labelledby="template-{{ key }}-delete-label" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <form class="dynamic-form" id="nastymaps-template-{{ key }}-form-delete" method="POST">
+                                            <input type="hidden" name="template_id" value="{{ template.id }}">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ "Delete template"|__ }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>{{ "Are you sure you want to remove"|__ }} {{ "the template"|__ }} <b>"{{ template.name|__ }}"</b>?<br></p>
+                                                <div class="alert text-center alert-danger mb-0" role="alert">
+                                                    <p class="mb-0"><b>{{ "Warning"|__ }}:</b> {{ "This action cannot be undone"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
+                                                <button type="submit" name="template[action]" value="delete" class="btn bg-nastymaps-action text-light">{{ "Go ahead"|__ }}!</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="modal fade" id="template-add" tabindex="-1" aria-labelledby="template-add-label" aria-hidden="true">
+                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <form class="dynamic-form" id="nastymaps-template-form-add" method="POST">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">{{ "New template"|__ }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="template-add-name" name="template[name]" class="form-control" placeholder="" value="">
+                                                    <label for="template-name">{{ "Name"|__ }}</label>
+                                                    <p class="form-text">{{ "The name of the template"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="template-add-name" name="template[name]" class="form-control" placeholder="" value="">
+                                                    <label for="template-name">{{ "Description"|__ }}</label>
+                                                    <p class="form-text">{{ "The description of the template"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mt-4 mb-3">
+                                                <div class="template-edit-variables-wrapper" id="template-add-variables-accordion">
+                                                    <div class="accordion-item">
+                                                        <div class="accordion-header d-flex align-items-center gap-3 mb-3" id="template-add-variables-heading">
+                                                            <h5 class="mb-0">{{ "Variables"|__ }}</h5>
+                                                            <ul class="nav nav-pills mb-0 ms-auto" id="template-add-pills-variables-tab" role="tablist">
+                                                                <li class="nav-item mb-0 ms-2" role="presentation">
+                                                                    <button class="toggle-icon-button nav-link bg-nastymaps-action d-flex flex-row align-items-center gap-2 active border" type="button" data-bs-toggle="collapse" data-bs-target="#template-add-variables-collapse" aria-expanded="true" aria-controls="template-add-variables-collapse">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-down-light.svg" alt="Expand" width="16" height="16" class="icon-expand d-none">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-up-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                        <p class="mb-0" data-text="toggle" data-expand-text="Expand" data-collapse-text="Collapse">Collapse</p>
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div id="template-add-variables-collapse" class="accordion-collapse collapse show" aria-labelledby="template-add-variables-heading" data-bs-parent="#template-add-variables-accordion">
+                                                            <div class="accordion-body">
+                                                                <div class="alert alert-info mb-0">
+                                                                    {% if variables %}
+                                                                        <div class="d-flex flex-row flex-wrap gap-2">
+                                                                            {% for variable in variables %}
+                                                                                <button class="variable-btn btn btn-info text-light d-flex align-items-center" title="{{ variable.unique_id }}" data-variable="{{ "{{"|raw }} {{ variable.unique_id }} {{ "}}"|raw }}" data-name="{{ variable.name }}">
+                                                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-content-paste-light.svg" alt="Copy" width="16" height="16">
+                                                                                    <span class="ms-2 text-sm">{{ variable.name }}</span>
+                                                                                </button>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    {% else %}
+                                                                        <span>{{ "No variables available"|__ }}.</span>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 my-3">
+                                                <div class="template-add-location-wrapper" id="addTemplateLocationAccordion">
+                                                    <div class="accordion-item">
+                                                        <div class="accordion-header d-flex align-items-center gap-3 mb-3" id="addTemplateLocationHeading">
+                                                            <h5 class="mb-0">{{ "Location"|__ }}</h5>
+                                                            <ul class="nav nav-pills mb-0 ms-auto" id="pills-location-tab" role="tablist">
+                                                                <li class="nav-item mb-0" role="presentation">
+                                                                    <button class="nav-link d-flex flex-row align-items-center gap-2 border active" id="pills-location-code-tab" data-bs-toggle="pill" data-bs-target="#pills-location-code" type="button" role="tab" aria-controls="pills-location-code" aria-selected="true">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-code-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                        Code
+                                                                    </button>
+                                                                </li>
+                                                                <li class="nav-item mb-0 ms-1" role="presentation">
+                                                                    <button class="nav-link d-flex flex-row align-items-center gap-2 border" id="pills-location-preview-tab" data-bs-toggle="pill" data-bs-target="#pills-location-preview" type="button" role="tab" aria-controls="pills-location-preview" aria-selected="false">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-visibility-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                        Preview
+                                                                    </button>
+                                                                </li>
+                                                                <li class="nav-item mb-0 ms-2" role="presentation">
+                                                                    <button class="toggle-icon-button nav-link bg-nastymaps-action d-flex flex-row align-items-center gap-2 active border" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddTemplateLocation" aria-expanded="true" aria-controls="collapseAddTemplateLocation">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-down-light.svg" alt="Expand" width="16" height="16" class="icon-expand d-none">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-up-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                        <p class="mb-0" data-text="toggle" data-expand-text="Expand" data-collapse-text="Collapse">Collapse</p>
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div id="collapseAddTemplateLocation" class="accordion-collapse collapse show" aria-labelledby="addTemplateLocationHeading" data-bs-parent="#addTemplateLocationAccordion">
+                                                            <div class="accordion-body">
+                                                                <div class="tab-content ps-4 pt-2 border-start" id="pills-location-tabContent">
+                                                                    <div class="tab-pane fade show active" id="pills-location-code" role="tabpanel" aria-labelledby="pills-location-code-tab" tabindex="0">
+                                                                        <div class="row mt-2">
+                                                                            <div class="col-12">
+                                                                                <div class="editor-wrap border-bottom">
+                                                                                    <textarea class="form-control nastymaps-editor" id="template-add-location-html" data-mode="application/x-httpd-php" name="template[location_html]" rows="10"></textarea>
+                                                                                </div>
+                                                                                <p class="form-text">{{ "The html for the location"|__ }}.</p>
+                                                                            </div>
+                                                                            <div class="col-12 col-lg-6">
+                                                                                <div class="editor-wrap border-bottom">
+                                                                                    <textarea class="form-control nastymaps-editor" id="template-add-location-js" data-mode="javascript" name="template[location_js]" rows="10"></textarea>
+                                                                                </div>
+                                                                                <p class="form-text">{{ "The js for the location html"|__ }}.</p>
+                                                                            </div>
+                                                                            <div class="col-12 col-lg-6">
+                                                                                <div class="editor-wrap border-bottom">
+                                                                                    <textarea class="form-control nastymaps-editor" id="template-add-location-css" data-mode="css" name="template[location_css]" rows="10"></textarea>
+                                                                                </div>
+                                                                                <p class="form-text">{{ "The css for the location html"|__ }}.</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade" id="pills-location-preview" role="tabpanel" aria-labelledby="pills-location-preview-tab" tabindex="0">
+                                                                        <div class="preview-wrap border-bottom">
+                                                                            <iframe id="template-add-location-preview" class="w-100" height="400" srcdoc=""></iframe>
+                                                                        </div>
+                                                                        <div class="preview-button-wrap py-3">
+                                                                            <button class="btn bg-nastymaps-action text-light preview-refresh-btn d-flex align-items-center justify-content-center w-100" type="button" data-preview-selector="template-add-location-preview" data-html-selector="template-add-location-html" data-js-selector="template-add-location-js" data-css-selector="template-add-location-css" id="template-add-location-preview-refresh">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-sync-light.svg" alt="Refresh" class="me-2" width="20" height="20">
+                                                                                {{ "Refresh preview"|__ }}
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="template-add-map-wrapper" id="addTemplateMapAccordion">
+                                                    <div class="accordion-item">
+                                                        <div class="accordion-header d-flex align-items-center gap-3 mb-3" id="addTemplateMapHeading">
+                                                            <h5 class="mb-0">{{ "Map"|__ }}</h5>
+                                                            <ul class="nav nav-pills mb-0 ms-auto" id="pills-map-tab" role="tablist">
+                                                                <li class="nav-item mb-0" role="presentation">
+                                                                    <button class="nav-link d-flex flex-row align-items-center gap-2 border active" id="pills-map-code-tab" data-bs-toggle="pill" data-bs-target="#pills-map-code" type="button" role="tab" aria-controls="pills-map-code" aria-selected="true">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-code-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                        Code
+                                                                    </button>
+                                                                </li>
+                                                                <li class="nav-item mb-0 ms-1" role="presentation">
+                                                                    <button class="nav-link d-flex flex-row align-items-center gap-2 border" id="pills-map-preview-tab" data-bs-toggle="pill" data-bs-target="#pills-map-preview" type="button" role="tab" aria-controls="pills-map-preview" aria-selected="false">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-visibility-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                        Preview
+                                                                    </button>
+                                                                </li>
+                                                                <li class="nav-item mb-0 ms-2" role="presentation">
+                                                                    <button class="toggle-icon-button nav-link bg-nastymaps-action d-flex flex-row align-items-center gap-2 active border" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddTemplateMap" aria-expanded="true" aria-controls="collapseAddTemplateMap">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-down-light.svg" alt="Expand" width="16" height="16" class="icon-expand d-none">
+                                                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-keyboard-arrow-up-light.svg" alt="Collapse" width="16" height="16" class="icon-collapse">
+                                                                        <p class="mb-0" data-text="toggle" data-expand-text="Expand" data-collapse-text="Collapse">Collapse</p>
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div id="collapseAddTemplateMap" class="accordion-collapse collapse show" aria-labelledby="addTemplateMapHeading" data-bs-parent="#addTemplateMapAccordion">
+                                                            <div class="accordion-body">
+                                                                <div class="tab-content ps-4 pt-2 border-start" id="pills-map-tabContent">
+                                                                    <div class="tab-pane fade show active" id="pills-map-code" role="tabpanel" aria-labelledby="pills-map-code-tab" tabindex="0">
+                                                                        <div class="row mt-2">
+                                                                            <div class="col-12">
+                                                                                <div class="editor-wrap border-bottom">
+                                                                                    <textarea class="form-control nastymaps-editor" id="template-add-map-html" data-mode="application/x-httpd-php" name="template[map_html]" rows="10"></textarea>
+                                                                                </div>
+                                                                                <p class="form-text">{{ "The html for the map-popup"|__ }}.</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade" id="pills-map-preview" role="tabpanel" aria-labelledby="pills-map-preview-tab" tabindex="0">
+                                                                        <div class="preview-wrap border-bottom">
+                                                                            <div id="template-add-map-preview"></div>
+                                                                        </div>
+                                                                        <div class="preview-button-wrap py-3">
+                                                                            <button class="btn bg-nastymaps-action text-light preview-refresh-btn d-flex align-items-center justify-content-center w-100" type="button" data-preview-selector="template-add-map-preview" data-html-selector="template-add-map-" data-js-selector="template-add-map-js" data-css-selector="template-add-map-css" id="template-add-map-preview-refresh">
+                                                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-sync-light.svg" alt="Refresh" width="20" height="20">
+                                                                                <span class="ms-2">{{ "Refresh preview"|__ }}</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {# <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="template-add-{{ key }}-" name="template[]" class="form-control" placeholder="" value="{{ template. }}">
+                                                    <label for="template-{{ key }}-">{{ ""|__ }}</label>
+                                                    <p class="form-text">{{ ""|__ }}.</p>
+                                                </div>
+                                            </div> #}
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
+                                        <button type="submit" name="template[action]" value="add" class="btn bg-nastymaps-action text-light">{{ "Add template"|__ }}</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

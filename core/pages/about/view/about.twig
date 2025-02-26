@@ -3,7 +3,7 @@
 {% block content %}
     {% if messages %}
         <!-- Alerts -->
-        <section id="dashboard-alerts" class="nastymaps-section my-4">
+        <section id="about-alerts" class="nastymaps-section my-4">
             <div class="nastymaps-wrap">
                 {% for message in messages %}
                     <div class="alert alert-{{ message.type }} alert-dismissible fade show" role="alert">
@@ -15,5 +15,18 @@
         </section>
     {% endif %}
 
-    <!-- Content -->
+    <!-- About -->
+    <section id="about" class="nastymaps-section my-4">
+        <div class="nastymaps-wrap">
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <h2>{{ "About"|__ }}</h2>
+                </div>
+                <div class="col-12 col-md-8 offset-md-4 col-xl-9 offset-xl-3 col-xxl-8 offset-xxl-4">
+                    <div class="wrapper p-3 rounded">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

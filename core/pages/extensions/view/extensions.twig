@@ -3,7 +3,7 @@
 {% block content %}
     {% if messages %}
         <!-- Alerts -->
-        <section id="settings-alerts" class="nastymaps-section my-4">
+        <section id="extensions-alerts" class="nastymaps-section my-4">
             <div class="nastymaps-wrap">
                 {% for message in messages %}
                     <div class="alert alert-{{ message.type }} alert-dismissible fade show" role="alert">
@@ -15,5 +15,146 @@
         </section>
     {% endif %}
 
-    <!-- Content -->
+    <!-- Extensions -->
+    <section id="extensions" class="nastymaps-section mt-4 mb-5">
+        <div class="nastymaps-wrap">
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <h2>{{ "Extensions"|__ }}</h2>
+                </div>
+                <div class="col-12 col-md-4 col-xl-3 col-xxl-4">
+                    <div class="section-desc d-flex flex-column me-lg-3 me-xl-4 me-xxl-5">
+                        <div class="desc-row alert alert-info d-flex flex-row gap-3">
+                            <div class="icon-wrap">
+                                <img src="{{ plugin_url }}assets/img/icons/material-icons-info.svg" alt="Info" width="22" height="22" draggable="false">
+                            </div>
+                            <div class="text-wrap">
+                                <span>{{ "Extensions are additional features that can be added to NastyMaps."|__ }}</span>
+                                <span>{{ "You can install or delete extensions from this page."|__ }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-8 col-xl-9 col-xxl-8">
+                    {% if extensions %}
+                        <table id="extensions-table" class="table table-hover" data-search-icon="{{ plugin_url }}assets/img/icons/material-icons-search.svg" data-extensions-icon="{{ plugin_url }}assets/img/icons/material-icons-extension.svg">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ "Title"|__ }}</th>
+                                    <th scope="col">{{ "Description"|__ }}</th>
+                                    <th scope="col" class="text-end">{{ "Actions"|__ }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, extension in extensions %}
+                                    <tr>
+                                        <td>{{ extension.title }}</td>
+                                        <td>{{ extension.description }}</td>
+                                        <td>
+                                            <div class="button-group gap-1 d-flex flex-row">
+                                                <button class="btn btn-danger btn-sm d-flex align-items-center justify-content-center ms-auto" type="button" data-bs-toggle="modal" data-bs-target="#extension-{{ key }}-delete" aria-controls="extension-{{ key }}-delete">
+                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-delete.svg" alt="Delete" class="me-1" width="16" height="16">
+                                                    <p class="mb-0">{{ "Delete"|__ }}</p>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    <div class="button-wrapper d-flex align-items-center mt-3">
+                        <button class="btn bg-nastymaps-action text-light d-flex align-items-center justify-content-center w-100" type="button" data-bs-toggle="modal" data-bs-target="#extension-add" aria-controls="extension-add">
+                            <img src="{{ plugin_url }}assets/img/icons/material-icons-add.svg" alt="Add" width="20" height="20">
+                            <span class="ms-2">{{ "Add extension"|__ }}</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12">
+                    {% if extensions %}
+                        {% for key, extension in extensions %}
+                            <div class="modal fade" id="extension-{{ key }}-delete" tabindex="-1" aria-labelledby="extension-{{ key }}-delete-label" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <form class="dynamic-form" id="nastymaps-extension-{{ key }}-form-delete" method="POST">
+                                            <input type="hidden" name="extension[slug]" value="{{ extension.slug }}">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ "Delete extension"|__ }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>{{ "Are you sure you want to remove"|__ }} {{ "the extension"|__ }} <b>"{{ extension.title|__ }}"</b>?<br></p>
+                                                <div class="alert text-center alert-danger mb-0" role="alert">
+                                                    <p class="mb-0"><b>{{ "Warning"|__ }}:</b> {{ "This action cannot be undone"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
+                                                <button type="submit" name="extension[action]" value="delete" class="btn bg-nastymaps-action text-light">{{ "Go ahead"|__ }}!</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="modal fade" id="extension-add" tabindex="-1" aria-labelledby="extension-add-label" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <form class="dynamic-form" id="nastymaps-extension-form-add" method="POST">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">{{ "New extension"|__ }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="extension-title" name="extension[title]" class="form-control" placeholder="" value="">
+                                                    <label for="extension-title">{{ "Title"|__ }}</label>
+                                                    <p class="form-text">{{ "The title of the extension"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="extension-slug" name="extension[slug]" class="form-control" placeholder="" value="">
+                                                    <label for="extension-slug">{{ "Slug"|__ }}</label>
+                                                    <p class="form-text">{{ "The slug of the extension"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="extension-version" name="extension[version]" class="form-control" placeholder="" value="">
+                                                    <label for="extension-version">{{ "Version"|__ }}</label>
+                                                    <p class="form-text">{{ "The version of the extension"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="extension-publisher" name="extension[publisher]" class="form-control" placeholder="" value="">
+                                                    <label for="extension-publisher">{{ "Publisher"|__ }}</label>
+                                                    <p class="form-text">{{ "The publisher of the extension"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <textarea id="extension-description" name="extension[description]" class="form-control" placeholder=""></textarea>
+                                                    <label for="extension-description">{{ "Description"|__ }}</label>
+                                                    <p class="form-text">{{ "The description of the extension"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
+                                        <button type="submit" name="extension[action]" value="add" class="btn bg-nastymaps-action text-light">{{ "Add extension"|__ }}</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

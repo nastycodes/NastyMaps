@@ -30,4 +30,7 @@ $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}nastymaps_custom_field");
 
 // delete posts
 $wpdb->query("DELETE FROM {$wpdb->prefix}posts WHERE `post_type`='nastylocation'");
+
+// unset installed option
+delete_option('nastymaps_installed');
 ?>

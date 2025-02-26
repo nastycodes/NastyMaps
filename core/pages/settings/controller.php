@@ -17,6 +17,7 @@
  */
 
 global $wpdb;
+$template = "/settings/view/settings.twig";
 $display = [];
 
 // by including the page.php file, we can use 
@@ -104,6 +105,38 @@ if (isset($_POST['custom_field']) && is_array($_POST['custom_field']) && !empty(
 $custom_fields = nastymaps_get_custom_fields();
 $display['custom_fields'] = $custom_fields;
 
+// Variable related
+if (isset($_POST['variable']) && is_array($_POST['variable']) && !empty($_POST['variable'])) {
+	switch (array_extract_key($_POST['variable'], 'action')) {
+		case 'add':
+			$result = nastymaps_add_variable($_POST['variable']);
+			break;
+		case 'edit':
+			$result = nastymaps_edit_variable($_POST['variable']);
+			break;
+		case 'delete':
+			$result = nastymaps_delete_variable($_POST['variable_id']);
+			break;
+		default:
+			$result = false;
+			break;
+	}
+
+	if ($result) {
+		$display['messages'][] = [
+			'type' => 'success',
+			'message' => __("Variable saved successfully.", NASTYMAPS_TEXT_DOMAIN)
+		];
+	} else {
+		$display['messages'][] = [
+			'type' => 'danger',
+			'message' => __("Error saving variable.", NASTYMAPS_TEXT_DOMAIN) . "<br><br><pre class=\"mb-0\">".print_r([$wpdb->last_error, $_POST['variable']], true)."</pre>"
+		];
+	}
+}
+$variables = nastymaps_get_variables();
+$display['variables'] = $variables;
+
 // Render the page
-$nastymaps_page->render("/settings/view/settings.twig", $display);
+$nastymaps_page->render($template, $display);
 ?>

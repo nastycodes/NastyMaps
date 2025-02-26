@@ -1,6 +1,6 @@
 <?php
 /**
- * Extensions Controller
+ * Docs Controller
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,12 @@
 
 global $wpdb;
 $display = [];
+$template = "/docs/view/docs.twig";
 
 // by including the page.php file, we can use 
 // the $nastymaps_page object to render the page
 include NASTYMAPS_INCLUDES_PATH . "/page/page.php";
 
-$extensions = $NASTYMAPS_WP_CLASS->get_extensions();
-$display['extensions'] = $extensions;
-
 // Render the page
-$nastymaps_page->render("/extensions/view/extensions.twig", $display);
+$nastymaps_page->render($template, $display);
 ?>

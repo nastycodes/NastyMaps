@@ -16,92 +16,115 @@
     {% endif %}
 
     <!-- General -->
-    <section id="settings-general" class="nastymaps-section my-4">
+    <section id="settings-general" class="nastymaps-section mt-4 mb-5">
         <div class="nastymaps-wrap">
             <div class="row">
                 <div class="col-12 mb-2">
                     <h2>{{ "General"|__ }}</h2>
                 </div>
-                <div class="col-12 col-lg-2 col-xl-3 col-xxl-4">
-                    <div class="me-lg-3">
-                        <p class="fs-6">{{ ""|__ }}</p>
+                <div class="col-12 col-md-4 col-xl-3 col-xxl-4">
+                    <div class="section-desc d-flex flex-column me-lg-3 me-xl-4 me-xxl-5">
+                        <div class="desc-row alert alert-info d-flex flex-row gap-3">
+                            <div class="icon-wrap">
+                                <img src="{{ plugin_url }}assets/img/icons/material-icons-info.svg" alt="Info" width="22" height="22" draggable="false">
+                            </div>
+                            <div class="text-wrap">
+                                <span>{{ "The general settings are for the basic configuration of the plugin"|__ }}.</span>
+                                <span>{{ "Make sure to double-check your settings before saving them since they can affect the functionality of the plugin"|__ }}.</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-10 col-xl-9 col-xxl-8">
-                    <div class="wrapper p-3 rounded">
-                        <form id="nastymaps-settings" method="post">
-                            <div class="row">
-                                {% if settings %}
-                                    {% for setting in settings %}
-                                        <div class="col-12 col-md-6">
-                                            <div class="form-floating">
-                                                <input type="text" id="{{ setting.name }}" name="settings[{{ setting.name }}]" class="form-control" value="{{ setting.value }}">
-                                                <label for="{{ setting.name }}">{{ setting.label }}</label>
-                                                <p class="form-text">{{ setting.description }}</p>
-                                            </div>
+                <div class="col-12 col-md-8 col-xl-9 col-xxl-8">
+                    <form id="nastymaps-settings" method="post">
+                        <div class="row">
+                            {% if settings %}
+                                {% for setting in settings %}
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" id="{{ setting.name }}" name="settings[{{ setting.name }}]" class="form-control"{% if setting.value %} value="{{ setting.value }}"{% endif %}>
+                                            <label for="{{ setting.name }}">{{ setting.label }}</label>
+                                            <p class="form-text">{{ setting.description|raw }}</p>
                                         </div>
-                                    {% endfor %}
-                                {% endif %}
-                                <div class="col-12">
-                                    <div class="button-wrapper d-flex align-items-center mt-3">
-                                        <button type="submit" class="btn btn-primary btn-lg d-flex align-items-center justify-content-center w-100">
-                                            <img src="{{ plugin_url }}assets/img/icons/material-icons-save.svg" alt="Save" width="20" height="20" draggable="false">
-                                            <span class="ms-2">{{ "Save changes"|__ }}</span>
-                                        </button>
                                     </div>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="col-12">
+                                <div class="button-wrapper d-flex align-items-center mt-3">
+                                    <button type="submit" class="btn bg-nastymaps-action text-light d-flex align-items-center justify-content-center w-100">
+                                        <img src="{{ plugin_url }}assets/img/icons/material-icons-save.svg" alt="Save" width="20" height="20" draggable="false">
+                                        <span class="ms-2">{{ "Save changes"|__ }}</span>
+                                    </button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Metaboxes -->
-    <section id="settings-metaboxes" class="nastymaps-section my-4">
+    <section id="settings-metaboxes" class="nastymaps-section my-5">
         <div class="nastymaps-wrap">
             <div class="row">
                 <div class="col-12 mb-2">
                     <h2 class="d-flex flex-row align-items-center gap-2">
-                        <img src="{{ plugin_url }}assets/img/icons/material-icons-ad.svg" alt="Metaboxes" width="24" height="24">
                         {{ "Metaboxes"|__ }}
                     </h2>
                 </div>
-                <div class="col-12 col-lg-2 col-xl-3 col-xxl-4">
-                    <div class="me-lg-3">
-                        <p class="fs-6">{{ ""|__ }}</p>
+                <div class="col-12 col-md-4 col-xl-3 col-xxl-4">
+                    <div class="section-desc d-flex flex-column me-lg-3 me-xl-4 me-xxl-5">
+                        <div class="desc-row alert alert-info d-flex flex-row gap-3">
+                            <div class="icon-wrap">
+                                <img src="{{ plugin_url }}assets/img/icons/material-icons-info.svg" alt="Info" width="22" height="22" draggable="false">
+                            </div>
+                            <div class="text-wrap">
+                                <span>{{ "The metaboxes are inside a post from the post type location found under"|__ }} <a class="text-decoration-none fw-bold text-info" href="{{ page_location }}" target="_blank">{{ "Locations"|__ }}</a>.</span>
+                                <span>{{ "They are used to group your custom fields to edit them in the backend"|__ }}.</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-10 col-xl-9 col-xxl-8">
-                    <div class="wrapper p-3 rounded">
-                        {% if metaboxes %}
-                            {% for key, metabox in metaboxes %}
-                                <div class="nastymaps-metabox d-flex align-items-center border p-3{% if not loop.last %} mb-2{% endif %}">
-                                    <div class="metabox-name w-100">
-                                        <p class="mb-0 h5">{{ metabox.name }}</p>
-                                    </div>
-                                    <div class="metabox-actions w-25">
-                                        <div class="button-group gap-1 d-flex flex-row">
-                                            <button class="btn btn-primary d-flex align-items-center justify-content-center ms-auto" type="button" data-bs-toggle="modal" data-bs-target="#metabox-{{ key }}-edit" aria-controls="metabox-{{ key }}-edit">
-                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-edit.svg" alt="Edit" width="20" height="20">
-                                                <span class="ms-2">{{ "Edit"|__ }}</span>
-                                            </button>
-                                            <button class="btn btn-danger d-flex align-items-center justify-content-center" type="button" data-bs-toggle="modal" data-bs-target="#metabox-{{ key }}-delete" aria-controls="metabox-{{ key }}-delete">
-                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-delete.svg" alt="Delete" width="20" height="20">
-                                                <span class="ms-2">{{ "Delete"|__ }}</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                        <div class="button-wrapper d-flex align-items-center mt-3">
-                            <button class="btn btn-primary btn-lg d-flex align-items-center justify-content-center w-100" type="button" data-bs-toggle="modal" data-bs-target="#metabox-add" aria-controls="metabox-add">
-                                <img src="{{ plugin_url }}assets/img/icons/material-icons-add.svg" alt="Add" width="20" height="20">
-                                <span class="ms-2">{{ "New metabox"|__ }}</span>
-                            </button>
-                        </div>
+                <div class="col-12 col-md-8 col-xl-9 col-xxl-8">
+                    {% if metaboxes %}
+                        <table id="settings-metaboxes-table" class="table table-hover" data-search-icon="{{ plugin_url }}assets/img/icons/material-icons-search.svg" data-metabox-icon="{{ plugin_url }}assets/img/icons/material-icons-ad.svg">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ "Name"|__ }}</th>
+                                    <th scope="col">{{ "Unique ID"|__ }}</th>
+                                    <th scope="col">{{ "Callback"|__ }}</th>
+                                    <th scope="col" class="text-end">{{ "Actions"|__ }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, metabox in metaboxes %}
+                                    <tr>
+                                        <td>{{ metabox.name }}</td>
+                                        <td>{{ metabox.unique_id }}</td>
+                                        <td>{{ metabox.callback }}</td>
+                                        <td>
+                                            <div class="button-group gap-1 d-flex flex-row">
+                                                <button class="btn bg-nastymaps-action text-light btn-sm d-flex align-items-center justify-content-center ms-auto" type="button" data-bs-toggle="modal" data-bs-target="#metabox-{{ key }}-edit" aria-controls="metabox-{{ key }}-edit">
+                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-edit.svg" alt="Edit" class="me-1" width="16" height="16">
+                                                    <p class="mb-0">{{ "Edit"|__ }}</p>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" type="button" data-bs-toggle="modal" data-bs-target="#metabox-{{ key }}-delete" aria-controls="metabox-{{ key }}-delete">
+                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-delete.svg" alt="Delete" class="me-1" width="16" height="16">
+                                                    <p class="mb-0">{{ "Delete"|__ }}</p>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    <div class="button-wrapper d-flex align-items-center mt-3">
+                        <button class="btn bg-nastymaps-action text-light d-flex align-items-center justify-content-center w-100" type="button" data-bs-toggle="modal" data-bs-target="#metabox-add" aria-controls="metabox-add">
+                            <img src="{{ plugin_url }}assets/img/icons/material-icons-add.svg" alt="Add" width="20" height="20">
+                            <span class="ms-2">{{ "New metabox"|__ }}</span>
+                        </button>
                     </div>
                 </div>
                 <div class="col-12">
@@ -143,7 +166,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
-                                                <button type="submit" name="metabox[action]" value="edit" class="btn btn-primary">{{ "Save changes"|__ }}</button>
+                                                <button type="submit" name="metabox[action]" value="edit" class="btn bg-nastymaps-action text-light">{{ "Save changes"|__ }}</button>
                                             </div>
                                         </div>
                                     </form>
@@ -166,7 +189,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
-                                                <button type="submit" name="metabox[action]" value="delete" class="btn btn-primary">{{ "Go ahead"|__ }}!</button>
+                                                <button type="submit" name="metabox[action]" value="delete" class="btn bg-nastymaps-action text-light">{{ "Go ahead"|__ }}!</button>
                                             </div>
                                         </form>
                                     </div>
@@ -209,7 +232,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
-                                        <button type="submit" name="metabox[action]" value="add" class="btn btn-primary">{{ "Save changes"|__ }}</button>
+                                        <button type="submit" name="metabox[action]" value="add" class="btn bg-nastymaps-action text-light">{{ "Add metabox"|__ }}</button>
                                     </div>
                                 </div>
                             </form>
@@ -221,56 +244,66 @@
     </section>
 
     <!-- Custom fields -->
-    <section id="settings-custom-fields" class="nastymaps-section my-4">
+    <section id="settings-custom-fields" class="nastymaps-section mt-5 mb-4">
         <div class="nastymaps-wrap">
             <div class="row">
                 <div class="col-12 mb-2">
                     <h2 class="d-flex flex-row align-items-center gap-2">
-                        <img src="{{ plugin_url }}assets/img/icons/material-icons-variables.svg" alt="Custom fields" width="24" height="24">
                         {{ "Custom fields"|__ }}
                     </h2>
                 </div>
-                <div class="col-12 col-lg-2 col-xl-3 col-xxl-4">
-                    <div class="me-lg-3">
-                        <p class="fs-6">{{ ""|__ }}</p>
+                <div class="col-12 col-md-4 col-xl-3 col-xxl-4">
+                    <div class="section-desc d-flex flex-column me-lg-3 me-xl-4 me-xxl-5">
+                        <div class="desc-row alert alert-info d-flex flex-row gap-3">
+                            <div class="icon-wrap">
+                                <img src="{{ plugin_url }}assets/img/icons/material-icons-info.svg" alt="Info" width="22" height="22" draggable="false">
+                            </div>
+                            <div class="text-wrap">
+                                <span>{{ "The custom fields are for the metaboxes in your location"|__ }}.<br>{{ "They are used to hold your individual data that you want to display on your page"|__ }}.</span>
+                                <span>{{ "The unique id of each field is also the placeholder for the templates. You can also add more placeholders down below"|__ }}.</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-10 col-xl-9 col-xxl-8">
-                    <div class="wrapper p-3 rounded">
-                        {% if custom_fields %}
-                            {% for key, custom_field in custom_fields %}
-                                <div class="nastymaps-custom-field d-flex align-items-center border p-3{% if not loop.last %} mb-2{% endif %}">
-                                    <div class="custom-field-name w-100">
-                                        <p class="d-flex align-items-center h5 mb-0">
-                                            <span class="btn btn-primary d-flex align-items-center me-2">
-                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-ad-light.svg" alt="Metabox" class="me-2" width="20" height="20">
-                                                {% set metabox = metaboxes|filter(metabox => metabox.id == custom_field.metabox_id) %}
-                                                {{ metabox|first.name|__ }}
-                                            </span>
-                                            {{ custom_field.name|__ }}
-                                        </p>
-                                    </div>
-                                    <div class="custom-field-actions w-25">
-                                        <div class="button-group gap-1 d-flex flex-row">
-                                            <button class="btn btn-primary d-flex align-items-center justify-content-center ms-auto" type="button" data-bs-toggle="modal" data-bs-target="#custom-field-{{ key }}-edit" aria-controls="custom-field-{{ key }}-edit">
-                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-edit.svg" alt="Edit" width="20" height="20">
-                                                <span class="ms-2">{{ "Edit"|__ }}</span>
-                                            </button>
-                                            <button class="btn btn-danger d-flex align-items-center justify-content-center" type="button" data-bs-toggle="modal" data-bs-target="#custom-field-{{ key }}-delete" aria-controls="custom-field-{{ key }}-delete">
-                                                <img src="{{ plugin_url }}assets/img/icons/material-icons-delete.svg" alt="Delete" width="20" height="20">
-                                                <span class="ms-2">{{ "Delete"|__ }}</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                        <div class="button-wrapper d-flex align-items-center mt-3">
-                            <button class="btn btn-primary btn-lg d-flex align-items-center justify-content-center w-100" type="button" data-bs-toggle="modal" data-bs-target="#custom-field-add" aria-controls="custom-field-add">
-                                <img src="{{ plugin_url }}assets/img/icons/material-icons-add.svg" alt="Add" width="20" height="20">
-                                <span class="ms-2">{{ "New custom field"|__ }}</span>
-                            </button>
-                        </div>
+                <div class="col-12 col-md-8 col-xl-9 col-xxl-8">
+                    {% if custom_fields %}
+                        <table id="settings-custom-fields-table" class="table table-hover" data-search-icon="{{ plugin_url }}assets/img/icons/material-icons-search.svg" data-custom-field-icon="{{ plugin_url }}assets/img/icons/material-icons-variables.svg">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Unique ID</th>
+                                    <th scope="col">Metabox</th>
+                                    <th scope="col" class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, custom_field in custom_fields %}
+                                    <tr>
+                                        <td>{{ custom_field.name }}</td>
+                                        <td>{{ custom_field.unique_id }}</td>
+                                        <td>{% set metabox = metaboxes|filter(metabox => metabox.id == custom_field.metabox_id) %}{{ metabox|first.name|__ }}</td>
+                                        <td>
+                                            <div class="button-group gap-1 d-flex flex-row">
+                                                <button class="btn bg-nastymaps-action text-light btn-sm d-flex align-items-center justify-content-center ms-auto" type="button" data-bs-toggle="modal" data-bs-target="#custom-field-{{ key }}-edit" aria-controls="custom-field-{{ key }}-edit">
+                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-edit.svg" alt="Edit" class="me-1" width="16" height="16">
+                                                    <p class="mb-0">{{ "Edit"|__ }}</p>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" type="button" data-bs-toggle="modal" data-bs-target="#custom-field-{{ key }}-delete" aria-controls="custom-field-{{ key }}-delete">
+                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-delete.svg" alt="Delete" class="me-1" width="16" height="16">
+                                                    <p class="mb-0">{{ "Delete"|__ }}</p>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    <div class="button-wrapper d-flex align-items-center mt-3">
+                        <button class="btn bg-nastymaps-action text-light d-flex align-items-center justify-content-center w-100" type="button" data-bs-toggle="modal" data-bs-target="#custom-field-add" aria-controls="custom-field-add">
+                            <img src="{{ plugin_url }}assets/img/icons/material-icons-add.svg" alt="Add" class="me-2" width="20" height="20">
+                            {{ "New custom field"|__ }}
+                        </button>
                     </div>
                 </div>
                 <div class="col-12">
@@ -319,7 +352,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
-                                                <button type="submit" name="custom_field[action]" value="edit" class="btn btn-primary">{{ "Save changes"|__ }}</button>
+                                                <button type="submit" name="custom_field[action]" value="edit" class="btn bg-nastymaps-action text-light">{{ "Save changes"|__ }}</button>
                                             </div>
                                         </div>
                                     </form>
@@ -342,7 +375,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
-                                                <button type="submit" name="custom_field[action]" value="delete" class="btn btn-primary">{{ "Go ahead"|__ }}!</button>
+                                                <button type="submit" name="custom_field[action]" value="delete" class="btn bg-nastymaps-action text-light">{{ "Go ahead"|__ }}!</button>
                                             </div>
                                         </form>
                                     </div>
@@ -392,7 +425,186 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
-                                        <button type="submit" name="custom_field[action]" value="add" class="btn btn-primary">{{ "Add custom field"|__ }}</button>
+                                        <button type="submit" name="custom_field[action]" value="add" class="btn bg-nastymaps-action text-light">{{ "Add custom field"|__ }}</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Variables -->
+    <section id="settings-variables" class="nastymaps-section mt-5 mb-4">
+        <div class="nastymaps-wrap">
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <h2 class="d-flex flex-row align-items-center gap-2">
+                        {{ "Variables"|__ }}
+                    </h2>
+                </div>
+                <div class="col-12 col-md-4 col-xl-3 col-xxl-4">
+                    <div class="section-desc d-flex flex-column me-lg-3 me-xl-4 me-xxl-5">
+                        <div class="desc-row alert alert-info d-flex flex-row gap-3">
+                            <div class="icon-wrap">
+                                <img src="{{ plugin_url }}assets/img/icons/material-icons-info.svg" alt="Info" width="22" height="22" draggable="false">
+                            </div>
+                            <div class="text-wrap">
+                                <span>{{ "Variables are used to display custom data in your templates"|__ }}.</span>
+                                <span>{{ "They are unique and can be used in your templates as variables"|__ }}.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-8 col-xl-9 col-xxl-8">
+                    {% if variables %}
+                        <table id="settings-variables-table" class="table table-hover" data-search-icon="{{ plugin_url }}assets/img/icons/material-icons-search.svg" data-variables-icon="{{ plugin_url }}assets/img/icons/material-icons-variables.svg">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Unique ID</th>
+                                    <th scope="col">Value</th>
+                                    <th scope="col" class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, variable in variables %}
+                                    <tr>
+                                        <td>{{ variable.name }}</td>
+                                        <td>{{ variable.unique_id }}</td>
+                                        <td>{{ variable.value }}</td>
+                                        <td>
+                                            <div class="button-group gap-1 d-flex flex-row">
+                                                <button class="btn bg-nastymaps-action text-light btn-sm d-flex align-items-center justify-content-center ms-auto" type="button" data-bs-toggle="modal" data-bs-target="#variable-{{ key }}-edit" aria-controls="variable-{{ key }}-edit">
+                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-edit.svg" alt="Edit" class="me-1" width="16" height="16">
+                                                    <p class="mb-0">{{ "Edit"|__ }}</p>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" type="button" data-bs-toggle="modal" data-bs-target="#variable-{{ key }}-delete" aria-controls="variable-{{ key }}-delete">
+                                                    <img src="{{ plugin_url }}assets/img/icons/material-icons-delete.svg" alt="Delete" class="me-1" width="16" height="16">
+                                                    <p class="mb-0">{{ "Delete"|__ }}</p>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    <div class="button-wrapper d-flex align-items-center mt-3">
+                        <button class="btn bg-nastymaps-action text-light d-flex align-items-center justify-content-center w-100" type="button" data-bs-toggle="modal" data-bs-target="#variable-add" aria-controls="variable-add">
+                            <img src="{{ plugin_url }}assets/img/icons/material-icons-add.svg" alt="Add" class="me-2" width="20" height="20">
+                            {{ "New variable"|__ }}
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12">
+                    {% if variables %}
+                        {% for key, variable in variables %}
+                            <div class="modal fade" id="variable-{{ key }}-edit" tabindex="-1" aria-labelledby="variable-{{ key }}-edit-label" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <form class="dynamic-form" id="nastymaps-variable-{{ key }}-form-edit" method="POST">
+                                        <input type="hidden" name="variable[id]" value="{{ variable.id }}">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ "Edit variable"|__ }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-floating">
+                                                            <input type="text" id="variable-{{ key }}-name" name="variable[name]" class="form-control" placeholder="" value="{{ variable.name }}">
+                                                            <label for="variable-{{ key }}-name">{{ "Name"|__ }}</label>
+                                                            <p class="form-text">{{ "The name of the variable"|__ }}.</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-floating">
+                                                            <input type="text" id="variable-{{ key }}-unique_id" name="variable[unique_id]" class="form-control" placeholder="" value="{{ variable.unique_id }}">
+                                                            <label for="variable-{{ key }}-unique_id">{{ "Unique ID"|__ }}</label>
+                                                            <p class="form-text">{{ "The unique identifier for the variable"|__ }}.</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-floating">
+                                                            <input type="text" id="variable-{{ key }}-value" name="variable[value]" class="form-control" placeholder="" value="{{ variable.value }}">
+                                                            <label for="variable-{{ key }}-value">{{ "Value"|__ }}</label>
+                                                            <p class="form-text">{{ "The value of the variable"|__ }}.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
+                                                <button type="submit" name="variable[action]" value="edit" class="btn bg-nastymaps-action text-light">{{ "Save changes"|__ }}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="variable-{{ key }}-delete" tabindex="-1" aria-labelledby="variable-{{ key }}-delete-label" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <form class="dynamic-form" id="nastymaps-variable-{{ key }}-form-delete" method="POST">
+                                            <input type="hidden" name="variable_id" value="{{ variable.id }}">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ "Delete variable"|__ }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>{{ "Are you sure you want to remove"|__ }} {{ "the variable"|__ }} <b>"{{ variable.name|__ }}"</b>?<br></p>
+                                                <div class="alert text-center alert-danger mb-0" role="alert">
+                                                    <p class="mb-0"><b>{{ "Warning"|__ }}:</b> {{ "This action cannot be undone"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
+                                                <button type="submit" name="variable[action]" value="delete" class="btn bg-nastymaps-action text-light">{{ "Go ahead"|__ }}!</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="modal fade" id="variable-add" tabindex="-1" aria-labelledby="variable-add-label" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <form class="dynamic-form" id="nastymaps-variable-form-add" method="POST">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">{{ "New variable"|__ }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="variable-name" name="variable[name]" class="form-control" placeholder="" value="">
+                                                    <label for="variable-name">{{ "Name"|__ }}</label>
+                                                    <p class="form-text">{{ "The name of the variable"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="variable-unique_id" name="variable[unique_id]" class="form-control" placeholder="" value="">
+                                                    <label for="variable-unique_id">{{ "Unique ID"|__ }}</label>
+                                                    <p class="form-text">{{ "The unique identifier for the variable"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <div class="form-floating">
+                                                    <input type="text" id="variable-value" name="variable[value]" class="form-control" placeholder="" value="">
+                                                    <label for="variable-value">{{ "Value"|__ }}</label>
+                                                    <p class="form-text">{{ "The value of the variable"|__ }}.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ "Cancel"|__ }}</button>
+                                        <button type="submit" name="variable[action]" value="add" class="btn bg-nastymaps-action text-light">{{ "Add variable"|__ }}</button>
                                     </div>
                                 </div>
                             </form>

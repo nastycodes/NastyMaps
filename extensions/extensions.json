@@ -1,0 +1,20 @@
+{
+    "export": {
+        "title": "Export",
+        "slug": "export",
+        "version": "1.0.0",
+        "publisher": "nasty.codes",
+        "description": "Export your data to a file.",
+        "controller": "/export/controller.php",
+        "view": "nastymaps_page_nastymaps-extension-export"
+    },
+    "import": {
+        "title": "Import",
+        "slug": "import",
+        "version": "1.0.0",
+        "publisher": "nasty.codes",
+        "description": "Import your data from a file.",
+        "controller": "/import/controller.php",
+        "view": "nastymaps_page_nastymaps-extension-import"
+    }
+}

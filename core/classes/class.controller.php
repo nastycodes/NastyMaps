@@ -33,8 +33,9 @@ class NastyMaps_Controller {
 	 * @param array $files The files to include
 	 * @return void
 	 */
-	private static function real_include($slug, $files) {
+	private static function real_include($class, $slug, $files) {
 		global $NASTYMAPS_PAGE_NAME; $NASTYMAPS_PAGE_NAME = $slug;
+		global $NASTYMAPS_WP_CLASS; $NASTYMAPS_WP_CLASS = $class;
 
 		if (is_array($files)) {
 			foreach ((array) $files as $file) {
@@ -52,14 +53,24 @@ class NastyMaps_Controller {
 	 * @param string $slug The slug of the view
 	 * @return void
 	 */
-	public static function include_view($slug) {
+	public static function include_view($class, $slug) {
 		if (!$slug) {
 			return;
 		}
 
-		self::real_include($slug, [
-			implode(DIRECTORY_SEPARATOR, [NASTYMAPS_PAGES_PATH, $slug, "controller.php"]),
-		]);
+		if (file_exists(implode(DIRECTORY_SEPARATOR, [NASTYMAPS_PAGES_PATH, $slug, "controller.php"]))) {
+			self::real_include($class, $slug, [
+				implode(DIRECTORY_SEPARATOR, [NASTYMAPS_PAGES_PATH, $slug, "controller.php"]),
+			]);
+			return;
+		}
+
+		if (file_exists(implode(DIRECTORY_SEPARATOR, [NASTYMAPS_EXTENSIONS_PATH, $slug, "controller.php"]))) {
+			self::real_include($class, $slug, [
+				implode(DIRECTORY_SEPARATOR, [NASTYMAPS_EXTENSIONS_PATH, $slug, "controller.php"]),
+			]);
+			return;
+		}
 	}
 }
 ?>

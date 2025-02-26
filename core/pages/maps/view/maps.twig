@@ -3,7 +3,7 @@
 {% block content %}
     {% if messages %}
         <!-- Alerts -->
-        <section id="settings-alerts" class="nastymaps-section my-4">
+        <section id="maps-alerts" class="nastymaps-section my-4">
             <div class="nastymaps-wrap">
                 {% for message in messages %}
                     <div class="alert alert-{{ message.type }} alert-dismissible fade show" role="alert">
@@ -14,6 +14,30 @@
             </div>
         </section>
     {% endif %}
-
-    <!-- Content -->
+    
+    <!-- Maps -->
+    <section id="maps" class="nastymaps-section my-4">
+        <div class="nastymaps-wrap">
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <h2>{{ "Maps"|__ }}</h2>
+                </div>
+                <div class="col-12 col-md-4 col-xl-3 col-xxl-4">
+                    <div class="section-desc d-flex flex-column me-lg-3 me-xl-4 me-xxl-5">
+                        <div class="desc-row alert alert-info d-flex flex-row gap-3">
+                            <div class="icon-wrap">
+                                <img src="{{ plugin_url }}assets/img/icons/material-icons-info.svg" alt="Info" width="22" height="22" draggable="false">
+                            </div>
+                            <div class="text-wrap">
+                                <span>{{ "Maps are used to display the location(s) of your business on your website"|__ }}.</span>
+                                <span>{{ "To see usage statistics or where a map is used head over to "|__ }} <a class="text-decoration-none fw-bold text-info" href="{{ page_dashboard_url }}" target="_blank">{{ "Dashboard"|__ }}</a>.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-8 col-xl-9 col-xxl-8">
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

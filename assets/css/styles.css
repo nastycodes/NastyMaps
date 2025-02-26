@@ -19,6 +19,53 @@
     --color-wrapper: #E7D7C1;
     --color-smooth-light: #EEE;
     --color-wp: #1D2327;
+    --color-nastymaps: #415A77;
+    --color-nastymaps-action: #293BB1;
+}
+
+form.dynamic-form {
+    width: 100%;
+}
+@media (min-width: 961px) {
+    .modal {
+        margin-left: 160px;
+        width: calc(100% - 160px) !important;
+    }
+}
+.modal {
+    margin-top: 46px;
+    height: calc(100% - 46px) !important;
+}
+@media (min-width: 783px) {
+    .modal {
+        margin-top: 32px;
+        height: calc(100% - 32px) !important;
+    }
+}
+.modal .nav-pills .nav-link {
+    font-size: .8em;
+    padding: 0.5em .75em;
+}
+.modal .nav-pills .nav-link:not(.active) {
+    color: var(--bs-nav-pills-link-active-color);
+    background-color: rgba(var(--bs-secondary-rgb), 1);
+}
+
+button img.spin {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.preview-wrap,
+.editor-wrap {
+    padding: 1rem 0;
 }
 
 .bg-wrapper {
@@ -27,8 +74,27 @@
 .bg-wp {
     background-color: var(--color-wp);
 }
+.bg-nastymaps {
+    background-color: var(--color-nastymaps) !important;
+}
+.bg-nastymaps-action {
+    background-color: var(--color-nastymaps-action) !important;
+}
+.border-nastymaps-action {
+    border-color: var(--color-nastymaps-action) !important;
+}
+.color-nastymaps-action {
+    color: var(--color-nastymaps-action) !important;
+}
+.bg-nastymaps-action:hover {
+    background-color: #212f8e !important;
+}
 .color-smooth-light {
     color: var(--color-smooth-light);
+}
+
+.section-desc {
+    border-radius: var(--bs-border-radius);
 }
 
 /* Icon */
@@ -38,13 +104,52 @@ a.toplevel_page_nastymaps .dashicons-before img {
 
 .header-wrap {
 	position: sticky;
-	top: 32px;
+	top: 0;
 	z-index: 999;
 }
 #nastymaps-subnav {
 	position: sticky;
-	top: 189.5px;
+	top: 157.5px;
 	z-index: 999;
+}
+@media (min-width: 783px) {
+    .header-wrap {
+        top: 32px;
+    }
+    #nastymaps-subnav {
+        top: 189.5px;
+    }
+}
+
+
+.dt-paging li {
+    margin-bottom: 0 !important;
+}
+.dt-paging li button.page-link {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+.dt-paging li button.page-link:not(.first):not(.previous):not(.next):not(.last) {
+    font-size: .8em;
+    line-height: 1.5rem;
+}
+.dt-search {
+    display: flex;
+    align-items: center;
+}
+.dt-search label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.dt-length {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.active>.page-link, .page-link.active {
+    background-color: var(--color-nastymaps-action) !important;
+    border-color: var(--color-nastymaps-action) !important;
 }
 
 /* Helpers */
@@ -145,7 +250,6 @@ a.toplevel_page_nastymaps .dashicons-before img {
 .nastymaps-wrap .title .outer-title-wrap .title-wrap {
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
 }
 .nastymaps-wrap .title .outer-title-wrap .title-wrap .description {
     margin: 0;
@@ -192,6 +296,12 @@ a.toplevel_page_nastymaps .dashicons-before img {
     margin-right: 10px;
 }
 
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #EEE;
+    background-color: #293BB1;
+    border-color: #293BB1;
+}
+
 /* Nav */
 .nastymaps-wrap .nav-tab-wrapper {
     display: flex;
@@ -222,6 +332,43 @@ a.toplevel_page_nastymaps .dashicons-before img {
 .nastymaps-wrap .nav-tab-wrapper a.nav-tab.nav-tab-active {
     color: #EEE;
 }
+
+
+/* .extension-card {
+    position: relative;
+    transition: background-color .5s ease, color .5s ease;
+}
+.extension-card:hover {
+    background-color: var(--color-nastymaps-action);
+    color: #EEE;
+}
+.extension-card .text-muted {
+    transition: color .5s ease;
+}
+.extension-card:hover .text-muted {
+    color: #d6d8d9 !important;
+}
+.extension-card-title {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 15px;
+}
+.extension-card-title:before {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background-color: var(--color-nastymaps-action);
+    content: '';
+    transition: background-color .5s ease;
+}
+.extension-card:hover .extension-card-title:before {
+    background-color: #EEE;
+} */
 
 /* Input */
 .inside .input-group { margin-top: 12px }

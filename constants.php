@@ -23,27 +23,35 @@ define('NASTYMAPS_DB_TABLES', [
 	'nastymaps_setting' => [
         'id'            => 'mediumint(9) NOT NULL AUTO_INCREMENT,',
         'name'          => 'varchar(255) NOT NULL UNIQUE,',
-        'value'         => 'text NOT NULL,',
+        'label'         => 'varchar(255) NOT NULL,',
+        'value'         => 'text,',
+        'description'   => 'text,',
         'PRIMARY'       => 'KEY (id)'
     ],
     'nastymaps_template' => [
         'id'            => 'mediumint(9) NOT NULL AUTO_INCREMENT,',
-        'html'          => 'text NOT NULL,',
-        'css'           => 'text NOT NULL,',
-        'js'            => 'text NOT NULL,',
+        'name'          => 'varchar(128) NOT NULL,',
+        'description'   => 'varchar(512),',
+        'location_html' => 'text,',
+        'location_css'  => 'text,',
+        'location_js'   => 'text,',
+        'map_html'      => 'text,',
         'PRIMARY'       => 'KEY (id)'
     ],
     'nastymaps_map' => [
         'id'            => 'mediumint(9) NOT NULL AUTO_INCREMENT,',
         'template_id'   => 'mediumint(9) NOT NULL,',
         'name'          => 'varchar(255) NOT NULL UNIQUE,',
+        'description'   => 'text,',
         'PRIMARY'       => 'KEY (id)',
     ],
     'nastymaps_map_setting' => [
         'id'            => 'mediumint(9) NOT NULL AUTO_INCREMENT,',
         'map_id'        => 'mediumint(9) NOT NULL,',
         'name'          => 'varchar(255) NOT NULL UNIQUE,',
-        'value'         => 'text NOT NULL,',
+        'label'         => 'varchar(255) NOT NULL,',
+        'value'         => 'text,',
+        'description'   => 'text,',
         'PRIMARY'       => 'KEY (id)',
     ],
     'nastymaps_metabox' => [
@@ -60,6 +68,13 @@ define('NASTYMAPS_DB_TABLES', [
         'name'          => 'varchar(255) NOT NULL,',
         'PRIMARY'       => 'KEY (id)',
     ],
+    'nastymaps_variable' => [
+        'id'            => 'mediumint(9) NOT NULL AUTO_INCREMENT,',
+        'name'          => 'varchar(255) NOT NULL UNIQUE,',
+        'unique_id'     => 'varchar(255) NOT NULL,',
+        'value'         => 'text,',
+        'PRIMARY'       => 'KEY (id)',
+    ]
 ]);
 
 // plugin tables data
@@ -80,17 +95,17 @@ define('NASTYMAPS_DB_DATA', [
     ],
     'nastymaps_metabox' => [
         [
-            'unique_id' => "location-address",
+            'unique_id' => "location_address",
             'name' => "Address",
             'callback' => "metabox_location_address"
         ],
         [
-            'unique_id' => "location-contact",
+            'unique_id' => "location_contact",
             'name' => "Contact",
             'callback' => "metabox_location_contact"
         ],
         [
-            'unique_id' => "location-geolocation",
+            'unique_id' => "location_geolocation",
             'name' => "Geolocation",
             'callback' => "metabox_location_geolocation"
         ]
@@ -98,62 +113,72 @@ define('NASTYMAPS_DB_DATA', [
     'nastymaps_custom_field' => [
         [
             'metabox_id' => 1,
-            'unique_id' => "nastymaps-address-company",
+            'unique_id' => "nastymaps_address_company",
             'name' => "Name",
         ],
         [
             'metabox_id' => 1,
-            'unique_id' => "nsatymaps-address-company-extra",
+            'unique_id' => "nastymaps_address_company_extra",
             'name' => "Extra",
         ],
         [
             'metabox_id' => 1,
-            'unique_id' => "nastymaps-address-street",
+            'unique_id' => "nastymaps_address_street",
             'name' => "Street",
         ],
         [
             'metabox_id' => 1,
-            'unique_id' => "nastymaps-address-zipcode",
+            'unique_id' => "nastymaps_address_street_no",
+            'name' => "Street no.",
+        ],
+        [
+            'metabox_id' => 1,
+            'unique_id' => "nastymaps_address_zipcode",
             'name' => "Zip",
         ],
         [
             'metabox_id' => 1,
-            'unique_id' => "nastymaps-address-city",
+            'unique_id' => "nastymaps_address_city",
             'name' => "City",
         ],
         [
             'metabox_id' => 1,
-            'unique_id' => "nastymaps-address-country",
+            'unique_id' => "nastymaps_address_state",
+            'name' => "State",
+        ],
+        [
+            'metabox_id' => 1,
+            'unique_id' => "nastymaps_address_country",
             'name' => "Country",
         ],
         [
             'metabox_id' => 2,
-            'unique_id' => "nastymaps-contact-phone",
+            'unique_id' => "nastymaps_contact_phone",
             'name' => "Phone",
         ],
         [
             'metabox_id' => 2,
-            'unique_id' => "nastymaps-contact-fax",
+            'unique_id' => "nastymaps_contact_fax",
             'name' => "Fax",
         ],
         [
             'metabox_id' => 2,
-            'unique_id' => "nastymaps-contact-mail",
+            'unique_id' => "nastymaps_contact_mail",
             'name' => "Mail",
         ],
         [
             'metabox_id' => 2,
-            'unique_id' => "nastymaps-contact-web",
+            'unique_id' => "nastymaps_contact_web",
             'name' => "Web",
         ],
         [
             'metabox_id' => 3,
-            'unique_id' => "nastymaps-geolocation-lat",
+            'unique_id' => "nastymaps_geolocation_lat",
             'name' => "Latitude",
         ],
         [
             'metabox_id' => 3,
-            'unique_id' => "nastymaps-geolocation-lng",
+            'unique_id' => "nastymaps_geolocation_lng",
             'name' => "Longitude",
         ]
     ]
@@ -174,6 +199,9 @@ define('NASTYMAPS_PLUGIN_BASENAME', plugin_basename(NASTYMAPS_PLUGIN));
 // plugin name
 define('NASTYMAPS_PLUGIN_NAME', trim(dirname(NASTYMAPS_PLUGIN_BASENAME), "/"));
 
+// post type
+define('NASTYMAPS_POST_TYPE', "nastylocation");
+
 // core path
 define('NASTYMAPS_CORE_PATH', NASTYMAPS_PLUGIN_DIR . "/core");
 
@@ -182,6 +210,9 @@ define('NASTYMAPS_ASSETS_PATH', NASTYMAPS_PLUGIN_DIR . "/assets");
 
 // vendor path
 define('NASTYMAPS_VENDOR_PATH', NASTYMAPS_PLUGIN_DIR . "/vendor");
+
+// extensions path
+define('NASTYMAPS_EXTENSIONS_PATH', NASTYMAPS_PLUGIN_DIR . "/extensions");
 
 // controller path
 define('NASTYMAPS_CONTROLLER_PATH', NASTYMAPS_CORE_PATH . "/controller");

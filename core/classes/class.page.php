@@ -85,6 +85,7 @@ class NastyMaps_Page {
         // Twig initialisieren
         $this->loader = new \Twig\Loader\FilesystemLoader([
             NASTYMAPS_CORE_PATH . "/templates",
+            NASTYMAPS_EXTENSIONS_PATH,
             NASTYMAPS_PAGES_PATH,
         ]);
         $this->twig = new \Twig\Environment($this->loader, [
